@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50) NOT NULL,
+  surname VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS companies (
+   id SERIAL PRIMARY KEY,
+   name VARCHAR(50) NOT NULL,
+   description VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS articles (
+   id SERIAL PRIMARY KEY,
+   title VARCHAR(50) NOT NULL,
+   description VARCHAR(255) NOT NULL,
+   publisher_id INT NOT NULL
+);
+
