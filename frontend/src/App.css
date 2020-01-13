@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
 .App-logo {
@@ -19,4 +21,11 @@
 
 .App-link {
   color: #09d3ac;
+}
+
+#portal > div{
+  background: rgba(0, 0, 0, .3);
+  height: 100vh;
+  width: 100vw;
+  position: absolute;
 }

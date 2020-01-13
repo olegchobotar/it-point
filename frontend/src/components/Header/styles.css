@@ -1,0 +1,29 @@
+.wrapper {
+    background: #000000;
+}
+
+.content {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10%;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+}
+
+.actions ul {
+    display: flex;
+    list-style: none;
+}
+
+.actions ul li a {
+    text-decoration: none;
+    margin: 0 0.5rem;
+    color: #9ea9aa;
+}
+
+.logo {
+    width: 200px;
+}
