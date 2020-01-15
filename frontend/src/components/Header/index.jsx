@@ -21,7 +21,7 @@ export default function (props) {
                                 <Link to="/users">Users</Link>
                             </li>
                             <li>
-                                <Link to="/login">Log In</Link>
+                                <Link to="/sign-in">Sign In</Link>
                             </li>
                         </ul>
                     </nav>

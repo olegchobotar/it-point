@@ -6,7 +6,8 @@ import {
   Route,
   Link,
 } from 'react-router-dom';
-import Login from './components/Routes/Login';
+import SignIn from './components/Routes/SignIn';
+import SignUp from './components/Routes/SignUp';
 
 import './App.css';
 
@@ -24,7 +25,8 @@ function App() {
           <Route path="/users">
               <div>hokhogk</div>
           </Route>
-          <Route path="/login" component={Login} />
+          <Route path="/sign-in" component={SignIn} />
+          <Route path="/sign-up" component={SignUp} />
       </Router>
     </div>
   );
