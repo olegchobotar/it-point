@@ -11,7 +11,7 @@ export default {
     /**
      * DB Query
      * @param {object} req
-     * @param {object} res
+     * @param {object} params
      * @returns {object} object
      */
     query(text, params){

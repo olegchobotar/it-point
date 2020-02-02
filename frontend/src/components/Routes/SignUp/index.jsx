@@ -29,7 +29,7 @@ const SignUp = props => {
     };
 
     const handleRegisterBtnClick = async () => {
-        const res = await axios.post('http://localhost:5000/users',
+        const res = await axios.post('http://localhost:5000/api/v1/users',
             {email, nickname, password});
         console.log(res);
     };
