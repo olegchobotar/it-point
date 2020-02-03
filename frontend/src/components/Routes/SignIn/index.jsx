@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './styles.css';
 import Modal from '../../Modal';
 import { TextField, Button, IconButton } from '@material-ui/core';
@@ -6,9 +6,21 @@ import { styled } from '@material-ui/styles';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import CloseIcon from '@material-ui/icons/Close';
+import loginUser from '../../../actions/user/loginUser';
+
 import { Link } from 'react-router-dom';
+import axios from "axios";
+import {connect} from "react-redux";
 
 const SignIn = props => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const handleLoginBtnClick = async () => {
+        const res = await axios.post('http://localhost:5000/api/v1/users/login',
+            {email, password});
+        props.loginUser(res.data.user);
+        localStorage.setItem('token', res.data.token);
+    };
     return (
         <Modal title="Sign in">
             <div>
@@ -18,7 +30,7 @@ const SignIn = props => {
                         label="Your email"
                         color="primary"
                                // value={value}
-                        onChange={() => {}}
+                        onChange={(event) => {setEmail(event.target.value)}}
                     />
                     <TextField
                         className="sign-in-form-input"
@@ -26,7 +38,7 @@ const SignIn = props => {
                         color="primary"
                         type="password"
                         // value={value}
-                        onChange={() => {}}
+                        onChange={(event) => {setPassword(event.target.value)}}
                     />
                     <div className="sign-in-form-forgot-password">
                         <Link to={'/reset-password'}>Forgot Password?</Link>
@@ -34,6 +46,7 @@ const SignIn = props => {
                     <StyledButton
                         color="primary"
                         fullWidth
+                        onClick={handleLoginBtnClick}
                     >
                         SIGN IN
                     </StyledButton>
@@ -57,8 +70,10 @@ const SignIn = props => {
     );
 };
 
-export default SignIn;
-
+export default connect(
+    null,
+    { loginUser }
+)(SignIn);
 const StyledButton = styled(Button) ({
     background: 'linear-gradient(40deg, #45cafc, #303f9f)',
     borderRadius: 50,

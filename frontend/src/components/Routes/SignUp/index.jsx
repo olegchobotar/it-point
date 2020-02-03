@@ -6,7 +6,9 @@ import { styled } from '@material-ui/styles';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import { Link } from 'react-router-dom';
+import loginUser from '../../../actions/user/loginUser';
 import axios from 'axios';
+import {connect} from "react-redux";
 
 const SignUp = props => {
     const [email, setEmail] = useState('');
@@ -31,6 +33,8 @@ const SignUp = props => {
     const handleRegisterBtnClick = async () => {
         const res = await axios.post('http://localhost:5000/api/v1/users',
             {email, nickname, password});
+        props.loginUser(res.data.user);
+        localStorage.setItem('token', res.data.token);
         console.log(res);
     };
 
@@ -84,7 +88,10 @@ const SignUp = props => {
     );
 };
 
-export default SignUp;
+export default connect(
+    null,
+    { loginUser }
+)(SignUp);
 
 const StyledButton = styled(Button) ({
     background: 'linear-gradient(40deg, #45cafc, #303f9f)',

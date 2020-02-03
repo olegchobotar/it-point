@@ -23,8 +23,7 @@ const Users = {
         if (!isValidEmail(req.body.email)) {
             return res.status(200).send({ 'message': 'Please enter a valid email address' });
         }
-        const hashPassword = hashPassword(req.body.password);
-        console.log(hashPassword)
+        const hashedPassword = hashPassword(req.body.password);
         const createQuery = `INSERT INTO
       users(id, nickname, email, password, created_date, modified_date)
       VALUES($1, $2, $3, $4, $5, $6)
@@ -33,15 +32,16 @@ const Users = {
             uuidv4(),
             req.body.nickname,
             req.body.email,
-            hashPassword,
+            hashedPassword,
             moment(new Date()),
             moment(new Date())
         ];
 
         try {
             const { rows } = await db.query(createQuery, values);
-            const token = generateToken(rows[0].id);
-            return res.status(201).send({ token });
+            const user = rows[0];
+            const token = generateToken(user.id);
+            return res.status(201).send({ token, user: getUserData(user) });
         } catch(error) {
             if (error.routine === '_bt_check_unique') {
                 return res.status(400).send({ 'message': 'User with that EMAIL already exist' })
