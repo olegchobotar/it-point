@@ -1,9 +1,25 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import Articles from '../../components/Articles';
 
-export default function (props) {
+const Home = props =>  {
+    const [articles, setArticles] = useState([]);
+
+    const fetchAPI = async () => {
+        const { data } = await axios.get('http://localhost:5000/api/v1/articles');
+        console.log(data.articles)
+        setArticles(data.articles);
+    };
+
+    useEffect( () => {
+        fetchAPI();
+    },[]);
     return (
         <div>
-            ffdf
+            {console.log(articles)}
+            <Articles articles={articles}/>
         </div>
     )
-}
+};
+
+export default Home;

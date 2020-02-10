@@ -1,5 +1,6 @@
 import React from 'react';
 import Home from './pages/Home/';
+import Article from './pages/Article/';
 import Header from './components/Header/';
 import {
   BrowserRouter as Router,
@@ -16,9 +17,8 @@ function App() {
     <div className="App">
       <Router>
         <Header />
-        <Route path="/">
-          <Home />
-        </Route>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/articles/:id" component={Article} />
           <Route path="/about">
               <div>fkfkfkfkfkf</div>
           </Route>

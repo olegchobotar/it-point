@@ -1,6 +1,7 @@
 import moment from 'moment';
 import uuidv4 from 'uuid/v4';
 import db from '../db';
+import articles from '../helpers/articles';
 
 const Articles = {
     /**
@@ -37,10 +38,10 @@ const Articles = {
      * @returns {object} reflections array
      */
     async getAll(req, res) {
-        const findAllQuery = 'SELECT * FROM reflections';
+        const findAllQuery = 'SELECT * FROM articles';
         try {
-            const { rows, rowCount } = await db.query(findAllQuery);
-            return res.status(200).send({ rows, rowCount });
+            // const { rows, rowCount } = await db.query(findAllQuery);
+            return res.status(200).send({ articles });
         } catch(error) {
             return res.status(400).send(error);
         }
@@ -54,11 +55,14 @@ const Articles = {
     async getOne(req, res) {
         const text = 'SELECT * FROM reflections WHERE id = $1';
         try {
-            const { rows } = await db.query(text, [req.params.id]);
-            if (!rows[0]) {
-                return res.status(404).send({'message': 'reflection not found'});
-            }
-            return res.status(200).send(rows[0]);
+            // const { rows } = await db.query(text, [req.params.id]);
+            // if (!rows[0]) {
+            //     return res.status(404).send({'message': 'reflection not found'});
+            // }
+            return res.status(200).send(articles.find((article) => {
+                console.log(article.id);
+                return article.id === +req.params.id
+            }));
         } catch(error) {
             return res.status(400).send(error)
         }

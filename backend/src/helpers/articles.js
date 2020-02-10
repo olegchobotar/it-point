@@ -1,0 +1,55 @@
+export default [
+    {
+        id: 0,
+        title: 'React hooks: not magic, just arrays',
+        author: 'Oleg Chobotar',
+        imageUrl: 'https://miro.medium.com/max/2500/1*TharLROVH7aX2MotovHOBQ.jpeg',
+        description: 'I have heard some people struggling with the ‘magic’ around the new hooks API draft proposal so I thought I would attempt to unpack how the syntax proposal works at least on a superficial level.',
+        content: '',
+        category: 'React',
+        date: '11.03.2020',
+    },
+    {
+        id: 1,
+        title: 'How Tech Will Transform The World in 10 Years',
+        author: 'Oleg Chobotar',
+        imageUrl: 'https://miro.medium.com/max/1400/1*kyTb_3haTcCT8it0W0Th-g.jpeg',
+        description: 'Peter Diamandis and Steven Kotler on everything from flying cars to health care.',
+        content: '',
+        category: 'Tech',
+        date: '11.03.2020',
+    },
+    {
+        id: 2,
+        title: 'React hooks: not magic, just arrays',
+        author: 'Oleg Chobotar',
+        imageUrl: 'https://miro.medium.com/max/2500/1*TharLROVH7aX2MotovHOBQ.jpeg',
+        description: 'I have heard some people struggling with the ‘magic’ around the new hooks API draft proposal so I thought I would attempt to unpack how the syntax proposal works at least on a superficial level.',
+        content: '',
+        category: 'React',
+        date: '11.03.2020',
+    },
+    {
+        id: 3,
+        title: 'React hooks: not magic, just arrays',
+        author: 'Oleg Chobotar',
+        imageUrl: 'https://miro.medium.com/max/2500/1*TharLROVH7aX2MotovHOBQ.jpeg',
+        description: 'I have heard some people struggling with the ‘magic’ around the new hooks API draft proposal so I thought I would attempt to unpack how the syntax proposal works at least on a superficial level.',
+        content: '',
+        category: 'React',
+        date: '11.03.2020',
+    },
+    {
+        id: 4,
+        title: 'React hooks: not magic, just arrays',
+        author: 'Oleg Chobotar',
+        imageUrl: 'https://miro.medium.com/max/2500/1*TharLROVH7aX2MotovHOBQ.jpeg',
+        description: 'I have heard some people struggling with the ‘magic’ around the new hooks API draft proposal so I thought I would attempt to unpack how the syntax proposal works at least on a superficial level.',
+        content: '',
+        category: 'React',
+        date: '11.03.2020',
+    },
+
+
+
+]

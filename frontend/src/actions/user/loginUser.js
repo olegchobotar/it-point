@@ -1,6 +1,4 @@
-const loginUser = user => ({
+export default user => ({
     type: 'LOGIN_USER',
     user,
 });
-
-export default loginUser;

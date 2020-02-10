@@ -1,3 +1,2 @@
-const logoutUser = ({ type: 'LOGOUT_USER' });
 
-export default logoutUser;
+export default ({ type: 'LOGOUT_USER' });

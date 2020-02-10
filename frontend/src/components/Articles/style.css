@@ -1,0 +1,12 @@
+.articles-wrapper {
+}
+
+.article-wrapper {
+    margin: 1rem auto;
+
+}
+
+.article-image {
+    height: 300px;
+    width: 70%;
+}
