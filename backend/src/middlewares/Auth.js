@@ -6,10 +6,9 @@ const Auth = {
      * Verify Token
      * @param {object} req
      * @param {object} res
-     * @param {object} next
      * @returns {object|void} response object
      */
-    async verifyToken(req, res, next) {
+    async verifyToken(req, res) {
         const token = req.headers['x-access-token'];
         if(!token) {
             return res.status(400).send({ 'message': 'Token is not provided' });
@@ -21,12 +20,11 @@ const Auth = {
             if(!rows[0]) {
                 return res.status(400).send({ 'message': 'The token you provided is invalid' });
             }
-            req.user = { id: decoded.userId };
-            next();
+            return res.status(200).send({userId: decoded.userId});
         } catch(error) {
             return res.status(400).send(error);
         }
     }
-}
+};
 
 export default Auth;

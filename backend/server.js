@@ -5,6 +5,7 @@ const cors = require('cors');
 const { pool } = require('./config');
 import Users from './src/controllers/Users';
 import Articles from './src/controllers/Articles';
+import Categories from './src/controllers/Categories';
 import Auth from './src/middlewares/Auth';
 // const db = require('./queries')
 
@@ -17,9 +18,14 @@ app.use(cors());
 
 app.post('/api/v1/users', Users.create);
 app.post('/api/v1/users/login',Users.login);
+app.get('/api/v1/users/profile', Auth.verifyToken);
 app.delete('/api/v1/users/me', Auth.verifyToken, Users.delete);
+
 app.get('/api/v1/articles', Articles.getAll);
 app.get('/api/v1/articles/:id', Articles.getOne);
+
+app.get('/api/v1/categories', Categories.getAll);
+
 
 // Start server
 app.listen(process.env.PORT || 5000, () => {

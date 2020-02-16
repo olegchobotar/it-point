@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import { getUserInitials } from '../../basic/helpers/user';
 
 import './style.css';
 import axios from "axios";
@@ -27,7 +28,7 @@ const useStyles = makeStyles({
 
 const Article = props => {
     const [article, setArticle] = useState([]);
-    console.log(props);
+
     const fetchAPI = async () => {
         const { data } = await axios.get(`http://localhost:5000/api/v1/articles/${props.match.params.id}`);
         console.log(data)
@@ -49,9 +50,7 @@ const Article = props => {
     } = article;
     const classes = useStyles();
 
-    const userInitials = author && author.split(' ').map(
-        word => word.charAt(0).toUpperCase()
-    ).join('');
+
 
     return (
         <div className='article-wrapper'>
@@ -72,7 +71,7 @@ const Article = props => {
                         className={classes.header}
                         avatar={
                             <Avatar aria-label="recipe" className={classes.avatar}>
-                                {userInitials}
+                                {getUserInitials(author)}
                             </Avatar>
                         }
                         title={author}

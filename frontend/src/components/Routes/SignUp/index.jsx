@@ -8,7 +8,9 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import { Link } from 'react-router-dom';
 import loginUser from '../../../actions/user/loginUser';
 import axios from 'axios';
-import {connect} from "react-redux";
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { withRouter } from 'react-router';
 
 const SignUp = props => {
     const [email, setEmail] = useState('');
@@ -35,7 +37,7 @@ const SignUp = props => {
             {email, nickname, password});
         props.loginUser(res.data.user);
         localStorage.setItem('token', res.data.token);
-        console.log(res);
+        props.history.push('/');
     };
 
     return (
@@ -88,9 +90,12 @@ const SignUp = props => {
     );
 };
 
-export default connect(
-    null,
-    { loginUser }
+export default compose(
+    connect(
+        null,
+        { loginUser }
+    ),
+    withRouter,
 )(SignUp);
 
 const StyledButton = styled(Button) ({

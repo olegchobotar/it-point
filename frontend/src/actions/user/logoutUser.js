@@ -1,2 +1,5 @@
 
-export default ({ type: 'LOGOUT_USER' });
+export default () => dispatch => {
+    localStorage.removeItem('token');
+    dispatch({ type: 'LOGOUT_USER' });
+}

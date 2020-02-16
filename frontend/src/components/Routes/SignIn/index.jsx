@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import './styles.css';
+import React, { useState } from 'react';
 import Modal from '../../Modal';
 import { TextField, Button, IconButton } from '@material-ui/core';
 import { styled } from '@material-ui/styles';
@@ -7,10 +6,13 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import CloseIcon from '@material-ui/icons/Close';
 import loginUser from '../../../actions/user/loginUser';
+import './styles.css';
 
 import { Link } from 'react-router-dom';
-import axios from "axios";
-import {connect} from "react-redux";
+import axios from 'axios';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { withRouter } from 'react-router';
 
 const SignIn = props => {
     const [email, setEmail] = useState('');
@@ -20,6 +22,7 @@ const SignIn = props => {
             {email, password});
         props.loginUser(res.data.user);
         localStorage.setItem('token', res.data.token);
+        props.history.push('/');
     };
     return (
         <Modal title="Sign in">
@@ -70,9 +73,12 @@ const SignIn = props => {
     );
 };
 
-export default connect(
-    null,
-    { loginUser }
+export default compose(
+    connect(
+        null,
+        { loginUser }
+    ),
+    withRouter,
 )(SignIn);
 const StyledButton = styled(Button) ({
     background: 'linear-gradient(40deg, #45cafc, #303f9f)',

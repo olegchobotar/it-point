@@ -1,11 +1,13 @@
 .wrapper {
     background: #000000;
+    height: 80px;
 }
 
 .content {
     display: flex;
     justify-content: space-between;
     padding: 0 10%;
+    height: 100%;
 }
 
 .actions {
@@ -13,17 +15,30 @@
     align-items: center;
 }
 
+.actions-dropdown {
+    cursor: pointer;
+}
+
+.actions-dropdown-avatar {
+    height: 30px;
+    width: 30px;
+}
+
 .actions ul {
     display: flex;
     list-style: none;
 }
 
-.actions ul li a {
+.actions ul li a, .actions ul li span, .actions ul li div {
     text-decoration: none;
     margin: 0 0.5rem;
     color: #9ea9aa;
+    display: flex;
 }
 
 .logo {
-    width: 200px;
+    display: flex;
+    align-self: center;
+    height: 30px;
+    cursor: pointer;
 }

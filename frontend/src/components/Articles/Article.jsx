@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import Avatar from '@material-ui/core/Avatar';
+import Avatar from '../Avatar';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -37,10 +37,6 @@ const Article = props => {
     } = props;
     const classes = useStyles();
 
-    const userInitials = author.split(' ').map(
-        word => word.charAt(0).toUpperCase()
-    ).join('');
-
     const handleRedirection = () => {
         props.history.push(`/articles/${id}`);
     };
@@ -65,9 +61,7 @@ const Article = props => {
                     <CardHeader
                         className={classes.header}
                         avatar={
-                            <Avatar aria-label="recipe" className={classes.avatar}>
-                                {userInitials}
-                            </Avatar>
+                            <Avatar user={author} />
                         }
                         title={author}
                         subheader={date}
@@ -90,14 +84,6 @@ const Article = props => {
                     </CardContent>
                 </CardActionArea>
             </Card>
-            {/*<img className="article-image" src={imageUrl} alt=""/>*/}
-            {/*<h3>{title}</h3>*/}
-            {/*<div>*/}
-                {/*<span>Posted on {date}</span>*/}
-                {/*<span>{author}</span>*/}
-            {/*</div>*/}
-            {/*<div>{description}</div>*/}
-            {/*<button>Read more</button>*/}
         </div>
     );
 };
