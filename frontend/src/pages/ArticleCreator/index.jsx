@@ -88,7 +88,6 @@ const ArticleCreator = props => {
                 rows="5"
                 onChange={event => setContent(event.target.value) }
             />
-            <Editor />
         </div>
 
     );

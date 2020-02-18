@@ -30,11 +30,13 @@ const createUsersTable = () => {
 const createCompaniesTable = () => {
     const query = `CREATE TABLE IF NOT EXISTS companies (
           id UUID PRIMARY KEY,
-          name VARCHAR(50) NOT NULL,
-          description VARCHAR(255) NOT NULL,
+          name VARCHAR(50) UNIQUE NOT NULL,
+          description VARCHAR(255),
           created_date TIMESTAMP,
-          modified_date TIMESTAMP
-    );
+          owner_id UUID NOT NULL,
+          modified_date TIMESTAMP,
+          FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
+     );
   `;
     makeQuery(query);
 };
@@ -54,6 +56,15 @@ const createArticlesTable = () => {
     makeQuery(query);
 };
 
+const createCategoriesTable = () => {
+    const query = `CREATE TABLE IF NOT EXISTS categories (
+          id UUID PRIMARY KEY,
+          name VARCHAR(50) NOT NULL
+    );
+  `;
+    makeQuery(query);
+};
+
 /**
  * Drop Tables
  */
@@ -64,12 +75,17 @@ const dropUsersTable = () => {
 };
 
 const dropCompaniesTable = () => {
-    const query = 'DROP TABLE IF EXISTS companies';
+    const query = 'DROP TABLE IF EXISTS companies CASCADE';
     makeQuery(query);
 };
 
 const dropArticlesTable = () => {
     const query = 'DROP TABLE IF EXISTS articles';
+    makeQuery(query);
+};
+
+const dropCategoriesTable = () => {
+    const query = 'DROP TABLE IF EXISTS categories';
     makeQuery(query);
 };
 
@@ -88,12 +104,14 @@ const createAllTables = () => {
     createUsersTable();
     createCompaniesTable();
     createArticlesTable();
+    createCategoriesTable();
 };
 
 const dropAllTables = () => {
     dropUsersTable();
     dropCompaniesTable();
     dropArticlesTable();
+    dropCategoriesTable();
 };
 
 pool.on('remove', () => {
@@ -109,7 +127,7 @@ module.exports = {
     dropCompaniesTable,
     dropArticlesTable,
     createAllTables,
-    dropAllTables
+    dropAllTables,
 };
 
 require('make-runnable');

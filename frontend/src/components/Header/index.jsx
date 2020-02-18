@@ -11,7 +11,6 @@ import logoutUser from '../../actions/user/logoutUser';
 import './styles.css';
 import {compose} from "redux";
 import {withRouter} from "react-router";
-import {getUserInitials} from "../../basic/helpers/user";
 import Avatar from '../Avatar';
 
 const Header = props => {
@@ -32,6 +31,11 @@ const Header = props => {
         props.logoutUser();
     };
 
+    const showSettings = () => {
+        setEmptyAnchor();
+        props.history.push('/settings');
+    };
+
     const handleLogoClick = () => {
         props.history.push('/');
     };
@@ -43,9 +47,6 @@ const Header = props => {
                 <div className="actions">
                     <nav>
                         <ul>
-                            <li>
-                                <Link to="/">Home</Link>
-                            </li>
                             <li>
                                 <Link to="/about">About</Link>
                             </li>
@@ -82,6 +83,7 @@ const Header = props => {
                                                 >
                                                     Create Article
                                                 </MenuItem>
+                                                <MenuItem onClick={showSettings}>Settings</MenuItem>
                                                 <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
                                             </Menu>
                                         </div>

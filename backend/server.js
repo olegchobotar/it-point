@@ -6,6 +6,7 @@ const { pool } = require('./config');
 import Users from './src/controllers/Users';
 import Articles from './src/controllers/Articles';
 import Categories from './src/controllers/Categories';
+import Companies from './src/controllers/Companies';
 import Auth from './src/middlewares/Auth';
 // const db = require('./queries')
 
@@ -23,6 +24,8 @@ app.delete('/api/v1/users/me', Auth.verifyToken, Users.delete);
 
 app.get('/api/v1/articles', Articles.getAll);
 app.get('/api/v1/articles/:id', Articles.getOne);
+
+app.post('/api/v1/companies', Companies.create);
 
 app.get('/api/v1/categories', Categories.getAll);
 
