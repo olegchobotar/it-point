@@ -22,7 +22,7 @@ const Settings = props => {
         if (company) {
             props.history.push(`/companies/${company.id}/edit`);
         } else {
-            props.history.push('/companies/create');
+            props.history.push('/create-company');
         }
 
     };

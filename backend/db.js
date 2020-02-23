@@ -20,9 +20,10 @@ const createUsersTable = () => {
             nickname VARCHAR(50) UNIQUE NOT NULL,
             email VARCHAR(50) UNIQUE NOT NULL,
             password VARCHAR(100) NOT NULL,
+            company_id UUID,
             created_date TIMESTAMP,
             modified_date TIMESTAMP
-         );
+           );
   `;
     makeQuery(query);
 };
@@ -37,6 +38,7 @@ const createCompaniesTable = () => {
           modified_date TIMESTAMP,
           FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
      );
+    alter table users add foreign key (company_id) references companies(id);
   `;
     makeQuery(query);
 };
@@ -80,7 +82,7 @@ const dropCompaniesTable = () => {
 };
 
 const dropArticlesTable = () => {
-    const query = 'DROP TABLE IF EXISTS articles';
+    const query = 'DROP TABLE IF EXISTS articles CASCADE ';
     makeQuery(query);
 };
 
@@ -103,13 +105,13 @@ const makeQuery = query =>
 const createAllTables = () => {
     createUsersTable();
     createCompaniesTable();
-    createArticlesTable();
     createCategoriesTable();
+    createArticlesTable();
 };
 
 const dropAllTables = () => {
-    dropUsersTable();
     dropCompaniesTable();
+    dropUsersTable();
     dropArticlesTable();
     dropCategoriesTable();
 };

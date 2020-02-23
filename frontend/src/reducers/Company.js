@@ -1,5 +1,5 @@
 const defaultState = {
-    company: {},
+    company: null,
 };
 
 export default (state = defaultState, action) => {
@@ -9,6 +9,8 @@ export default (state = defaultState, action) => {
                 ...state,
                 company: action.company,
             };
+        case 'CLEAR_COMPANY':
+            return defaultState;
         default:
             return state;
     }

@@ -74,8 +74,12 @@ const Users = {
             if(!comparePassword(user.password, req.body.password)) {
                 return res.status(400).send({ 'message': 'The credentials you provided is incorrect' });
             }
+
+            const getRelatedCompanyQuery = 'SELECT * FROM companies WHERE owner_id = $1';
+            const { rows: company } = await db.query(getRelatedCompanyQuery, [user.id]);
+
             const token = generateToken(user.id);
-            return res.status(200).send({ token, user: getUserData(user) });
+            return res.status(200).send({ token, user: getUserData(user), company: company[0] });
         } catch(error) {
             return res.status(400).send(error)
         }

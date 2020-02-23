@@ -18,57 +18,60 @@ const SignIn = props => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const handleLoginBtnClick = async () => {
-        const res = await axios.post('http://localhost:5000/api/v1/users/login',
-            {email, password});
-        props.loginUser(res.data.user);
-        localStorage.setItem('token', res.data.token);
-        props.history.push('/');
+        props.loginUser(email, password).then(
+            () => {
+                props.history.push('/');
+            }
+        );
     };
     return (
         <Modal title="Sign in">
-            <div>
+            <form>
                 <div>
-                    <TextField
-                        className="sign-in-form-input"
-                        label="Your email"
-                        color="primary"
-                               // value={value}
-                        onChange={(event) => {setEmail(event.target.value)}}
-                    />
-                    <TextField
-                        className="sign-in-form-input"
-                        label="Your password"
-                        color="primary"
-                        type="password"
-                        // value={value}
-                        onChange={(event) => {setPassword(event.target.value)}}
-                    />
-                    <div className="sign-in-form-forgot-password">
-                        <Link to={'/reset-password'}>Forgot Password?</Link>
+                    <div>
+                        <TextField
+                            className="sign-in-form-input"
+                            label="Your email"
+                            color="primary"
+                            // value={value}
+                            onChange={(event) => {setEmail(event.target.value)}}
+                        />
+                        <TextField
+                            className="sign-in-form-input"
+                            label="Your password"
+                            color="primary"
+                            type="password"
+                            // value={value}
+                            onChange={(event) => {setPassword(event.target.value)}}
+                        />
+                        <div className="sign-in-form-forgot-password">
+                            <Link to={'/reset-password'}>Forgot Password?</Link>
+                        </div>
+                        <StyledButton
+                            color="primary"
+                            fullWidth
+                            onClick={handleLoginBtnClick}
+                        >
+                            SIGN IN
+                        </StyledButton>
+                        <span className="sign-in-form-sign-with">Or Sign in with:</span>
                     </div>
-                    <StyledButton
-                        color="primary"
-                        fullWidth
-                        onClick={handleLoginBtnClick}
-                    >
-                        SIGN IN
-                    </StyledButton>
-                    <span className="sign-in-form-sign-with">Or Sign in with:</span>
-                </div>
-                <div className="sign-in-form-social-wrapper">
-                    <StyledIconButton className="sign-in-form-social">
-                        <FacebookIcon />
-                    </StyledIconButton>
-                    <StyledIconButton className="sign-in-form-social">
-                        <TwitterIcon />
-                    </StyledIconButton>
-                </div>
-                <hr/>
-                <span className="sign-in-form-sign-up">
+                    <div className="sign-in-form-social-wrapper">
+                        <StyledIconButton className="sign-in-form-social">
+                            <FacebookIcon />
+                        </StyledIconButton>
+                        <StyledIconButton className="sign-in-form-social">
+                            <TwitterIcon />
+                        </StyledIconButton>
+                    </div>
+                    <hr/>
+                    <span className="sign-in-form-sign-up">
                     Not a member?
                     <Link to={'/sign-up'}> Sign up </Link>
                 </span>
-            </div>
+                </div>
+            </form>
+
         </Modal>
     );
 };
