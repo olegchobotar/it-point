@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import Modal from '../../Modal';
-import { TextField, Button, IconButton } from '@material-ui/core';
-import { styled } from '@material-ui/styles';
-import CloseIcon from '@material-ui/icons/Close';
+
 import loginUser from '../../../actions/user/loginUser';
 import './style.css';
 
-import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router';
@@ -20,7 +16,7 @@ const Settings = props => {
 
     const handleCompanyClick = () => {
         if (company) {
-            props.history.push(`/companies/${company.id}/edit`);
+            props.history.push(`/edit-company`);
         } else {
             props.history.push('/create-company');
         }
@@ -55,29 +51,14 @@ const Settings = props => {
     );
 };
 
-const mapDispatchToProps = state => ({
+const mapStateToProps = state => ({
    company: state.Company.company,
 });
 
 export default compose(
     connect(
-        mapDispatchToProps,
+        mapStateToProps,
         { loginUser }
     ),
     withRouter,
 )(Settings);
-const StyledButton = styled(Button) ({
-    background: 'linear-gradient(40deg, #45cafc, #303f9f)',
-    borderRadius: 50,
-    boxShadow: '0 4px 5px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15)',
-    color: 'white',
-    height: 48,
-    marginTop: '30px',
-    padding: '0 30px',
-});
-
-const StyledIconButton = styled(IconButton) ({
-    borderRadius: 50,
-    boxShadow: '0 2px 5px 0 rgba(0,0,0,0.16), 0 2px 10px 0 rgba(0,0,0,0.12)',
-    width: '70px',
-});

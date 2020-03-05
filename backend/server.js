@@ -23,12 +23,12 @@ app.get('/api/v1/users/profile', Auth.verifyToken);
 app.delete('/api/v1/users/me', Auth.verifyToken, Users.delete);
 
 app.get('/api/v1/articles', Articles.getAll);
+app.post('/api/v1/articles', Articles.create);
 app.get('/api/v1/articles/:id', Articles.getOne);
 
 app.post('/api/v1/companies', Companies.create);
 
 app.get('/api/v1/categories', Categories.getAll);
-
 
 // Start server
 app.listen(process.env.PORT || 5000, () => {

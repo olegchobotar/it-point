@@ -2,32 +2,42 @@ import moment from 'moment';
 import uuidv4 from 'uuid/v4';
 import db from '../db';
 import articles from '../helpers/articles';
+import jwt from "jsonwebtoken";
 
 const Articles = {
-    /**
-     * Create A Reflection
-     * @param {object} req
-     * @param {object} res
-     * @returns {object} reflection object
-     */
     async create(req, res) {
-        const text = `INSERT INTO
-      reflections(id, success, low_point, take_away, created_date, modified_date)
-      VALUES($1, $2, $3, $4, $5, $6)
-      returning *`;
+        const { title, onlyForCompany, imageUrl, content, categories } = req.body;
+
+        const token = req.headers['x-access-token'];
+        if(!token) {
+            return res.status(400).send({ 'message': 'Token is not provided' });
+        }
+        const decoded = await jwt.verify(token, process.env.SECRET);
+        const articlesText = `
+            INSERT INTO articles(title, only_for_company, image_url, content, created_date, modified_date, author_id)
+            VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id;
+        `;
+
         const values = [
-            uuidv4(),
-            req.body.success,
-            req.body.low_point,
-            req.body.take_away,
+            title,
+            onlyForCompany,
+            imageUrl,
+            content,
             moment(new Date()),
-            moment(new Date())
+            moment(new Date()),
+            decoded.userId,
         ];
 
         try {
-            const { rows } = await db.query(text, values);
-            return res.status(201).send(rows[0]);
+            const { rows: articleRow } = await db.query(articlesText, values);
+            const articleId = articleRow[0].id;
+            categories.forEach(async category => {
+                const categoriesText = `INSERT INTO article_categories(article_id, name) VALUES ($1, $2)`;
+                await db.query(categoriesText, [articleId, category]);
+            });
+            return res.status(201).send({articleRow, categories});
         } catch(error) {
+            console.log(error)
             return res.status(400).send(error);
         }
     },
@@ -38,11 +48,24 @@ const Articles = {
      * @returns {object} reflections array
      */
     async getAll(req, res) {
-        const findAllQuery = 'SELECT * FROM articles';
+        const findAllQuery = `
+            SELECT a.id, a.title, a.only_for_company, a.image_url, a.content, a.created_date, u.nickname AS author, c.categories 
+            FROM articles AS a
+            INNER JOIN users AS u
+            ON a.author_id = u.id, LATERAL (
+              SELECT ARRAY(
+                     SELECT name
+                     FROM article_categories AS c
+                     WHERE c.article_id = a.id
+                   ) AS categories
+              ) c
+            `;
         try {
-            // const { rows, rowCount } = await db.query(findAllQuery);
-            return res.status(200).send({ articles });
+            const { rows, rowCount } = await db.query(findAllQuery);
+            console.log(rows)
+            return res.status(200).send({ articles: rows });
         } catch(error) {
+            console.log(error)
             return res.status(400).send(error);
         }
     },

@@ -11,9 +11,9 @@ const Categories = {
      * @returns {object} reflections array
      */
     async getAll(req, res) {
-        const findAllQuery = 'SELECT * FROM articles';
+        const findAllQuery = 'SELECT * FROM categories';
         try {
-            // const { rows, rowCount } = await db.query(findAllQuery);
+            const { rows, rowCount } = await db.query(findAllQuery);
             return res.status(200).send(categories);
         } catch(error) {
             return res.status(400).send(error);

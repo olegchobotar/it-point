@@ -47,8 +47,9 @@ const createArticlesTable = () => {
     const query = `CREATE TABLE IF NOT EXISTS articles (
          id UUID PRIMARY KEY,
          title VARCHAR(50) NOT NULL,
-         description VARCHAR(255) NOT NULL,
-         publisher_id INT NOT NULL,
+         only_for_company BOOLEAN,
+         image_url VARCHAR(100),
+         content VARCHAR(1500) NOT NULL,
          created_date TIMESTAMP,
          modified_date TIMESTAMP,
          author_id UUID NOT NULL,
@@ -67,6 +68,17 @@ const createCategoriesTable = () => {
     makeQuery(query);
 };
 
+const createCategoriesToArticlesTable = () => {
+    const query = `CREATE TABLE IF NOT EXISTS categories_to_articles (
+          article_id UUID REFERENCES articles ON DELETE CASCADE,
+          category_id UUID REFERENCES categories ON DELETE CASCADE,
+          PRIMARY KEY (article_id, category_id)
+     )`;
+
+    makeQuery(query)
+};
+
+
 /**
  * Drop Tables
  */
@@ -82,12 +94,17 @@ const dropCompaniesTable = () => {
 };
 
 const dropArticlesTable = () => {
-    const query = 'DROP TABLE IF EXISTS articles CASCADE ';
+    const query = 'DROP TABLE IF EXISTS articles CASCADE';
     makeQuery(query);
 };
 
 const dropCategoriesTable = () => {
-    const query = 'DROP TABLE IF EXISTS categories';
+    const query = 'DROP TABLE IF EXISTS categories CASCADE';
+    makeQuery(query);
+};
+
+const dropCategoriesToArticlesTable = () => {
+    const query = 'DROP TABLE IF EXISTS categories_to_articles CASCADE';
     makeQuery(query);
 };
 
@@ -102,11 +119,12 @@ const makeQuery = query =>
             pool.end();
         });
 
-const createAllTables = () => {
-    createUsersTable();
-    createCompaniesTable();
-    createCategoriesTable();
-    createArticlesTable();
+const createAllTables = async () => {
+    await createUsersTable();
+    await createCompaniesTable();
+    await createCategoriesTable();
+    await createArticlesTable();
+    await createCategoriesToArticlesTable();
 };
 
 const dropAllTables = () => {
@@ -114,6 +132,7 @@ const dropAllTables = () => {
     dropUsersTable();
     dropArticlesTable();
     dropCategoriesTable();
+    dropCategoriesToArticlesTable();
 };
 
 pool.on('remove', () => {
@@ -125,11 +144,13 @@ module.exports = {
     createUsersTable,
     createCompaniesTable,
     createArticlesTable,
+    createCategoriesToArticlesTable,
     dropUsersTable,
     dropCompaniesTable,
     dropArticlesTable,
     createAllTables,
     dropAllTables,
+    dropCategoriesToArticlesTable,
 };
 
 require('make-runnable');

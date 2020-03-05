@@ -21,11 +21,10 @@ const Companies = {
         const decoded = await jwt.verify(token, process.env.SECRET);
 
         const createQuery = `INSERT INTO
-      companies(id, name, owner_id, created_date, modified_date)
+      companies(name, owner_id, created_date, modified_date)
       VALUES($1, $2, $3, $4, $5)
       returning *`;
         const values = [
-            uuidv4(),
             req.body.name,
             decoded.userId,
             moment(new Date()),

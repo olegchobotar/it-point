@@ -29,11 +29,11 @@ const Article = props => {
     const {
         id,
         title,
-        category,
+        categories,
         author,
-        imageUrl,
-        description,
-        date,
+        image_url: imageUrl,
+        content,
+        created_date: createdDate,
     } = props;
     const classes = useStyles();
 
@@ -48,7 +48,7 @@ const Article = props => {
                     padding: '0.5rem 0',
                     textAlign: 'center'}}
                 >
-                    <span className="card-item-category">{category}</span>
+                    <span className="card-item-category">{categories ? categories[0] : 'ni'}</span>
                 </div>
                 <CardActionArea
                     onClick={handleRedirection}
@@ -64,7 +64,7 @@ const Article = props => {
                             <Avatar user={author} />
                         }
                         title={author}
-                        subheader={date}
+                        subheader={createdDate}
                     />
                     <CardContent>
                         <Typography
@@ -79,7 +79,7 @@ const Article = props => {
                             color="textSecondary"
                             component="p"
                         >
-                            {description}
+                            {content}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

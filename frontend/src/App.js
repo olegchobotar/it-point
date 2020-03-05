@@ -10,6 +10,7 @@ import SignIn from './components/Routes/SignIn';
 import SignUp from './components/Routes/SignUp';
 import Settings from './components/Routes/Settings';
 import CreateCompany from './components/Routes/CreateCompany';
+import EditCompany from './pages/EditCompany';
 import ArticleCreator from './pages/ArticleCreator';
 import isValidToken from './actions/user/isValidToken';
 
@@ -37,6 +38,7 @@ function App(props) {
           <Route path="/sign-up" component={SignUp} />
           <Route path="/settings" component={Settings} />
           <Route path="/create-company" component={CreateCompany} />
+          <Route path="/edit-company" component={EditCompany} />
       </Router>
     </div>
   );

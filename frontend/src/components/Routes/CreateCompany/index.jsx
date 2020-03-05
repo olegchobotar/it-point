@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from '../../Modal';
-import { TextField, Button } from '@material-ui/core';
-import { styled } from '@material-ui/styles';
+import { TextField } from '@material-ui/core';
+import Button from './../../../components/Button';
 import setCompany from '../../../actions/company/setCompany';
 import './style.css';
 
@@ -35,13 +35,13 @@ const CreateCompany = props => {
                         color="primary"
                         onChange={(event) => {setName(event.target.value)}}
                     />
-                    <StyledButton
+                    <Button
                         color="primary"
                         fullWidth
                         onClick={handleCompanyCreationClick}
                     >
                         Register
-                    </StyledButton>
+                    </Button>
                 </div>
 
             </div>
@@ -60,12 +60,3 @@ export default compose(
     ),
     withRouter,
 )(CreateCompany);
-const StyledButton = styled(Button) ({
-    background: 'linear-gradient(40deg, #45cafc, #303f9f)',
-    borderRadius: 50,
-    boxShadow: '0 4px 5px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15)',
-    color: 'white',
-    height: 48,
-    marginTop: '30px',
-    padding: '0 30px',
-});

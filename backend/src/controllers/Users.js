@@ -25,11 +25,10 @@ const Users = {
         }
         const hashedPassword = hashPassword(req.body.password);
         const createQuery = `INSERT INTO
-      users(id, nickname, email, password, created_date, modified_date)
-      VALUES($1, $2, $3, $4, $5, $6)
+      users(nickname, email, password, created_date, modified_date)
+      VALUES($1, $2, $3, $4, $5)
       returning *`;
         const values = [
-            uuidv4(),
             req.body.nickname,
             req.body.email,
             hashedPassword,

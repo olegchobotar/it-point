@@ -4,12 +4,12 @@ import Avatar from '@material-ui/core/Avatar';
 import { getUserInitials } from '../../basic/helpers/user';
 import PropTypes from 'prop-types';
 
-import './style.css';
-
 const useStyles = makeStyles({
     avatar: {
         height: props => props.size,
         width: props => props.size,
+        background: '#8a8a8a',
+        color: '#3e3e3e !important',
     },
 });
 

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Modal from '../../Modal';
-import { TextField, Button, IconButton } from '@material-ui/core';
+import { TextField, IconButton } from '@material-ui/core';
 import { styled } from '@material-ui/styles';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
-import CloseIcon from '@material-ui/icons/Close';
+import Button from '../../../components/Button';
 import loginUser from '../../../actions/user/loginUser';
 import './styles.css';
 
@@ -47,13 +47,13 @@ const SignIn = props => {
                         <div className="sign-in-form-forgot-password">
                             <Link to={'/reset-password'}>Forgot Password?</Link>
                         </div>
-                        <StyledButton
+                        <Button
                             color="primary"
                             fullWidth
                             onClick={handleLoginBtnClick}
                         >
                             SIGN IN
-                        </StyledButton>
+                        </Button>
                         <span className="sign-in-form-sign-with">Or Sign in with:</span>
                     </div>
                     <div className="sign-in-form-social-wrapper">
@@ -83,15 +83,6 @@ export default compose(
     ),
     withRouter,
 )(SignIn);
-const StyledButton = styled(Button) ({
-    background: 'linear-gradient(40deg, #45cafc, #303f9f)',
-    borderRadius: 50,
-    boxShadow: '0 4px 5px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15)',
-    color: 'white',
-    height: 48,
-    marginTop: '30px',
-    padding: '0 30px',
-});
 
 const StyledIconButton = styled(IconButton) ({
     borderRadius: 50,

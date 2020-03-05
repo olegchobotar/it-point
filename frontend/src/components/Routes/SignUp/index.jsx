@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import './styles.css';
 import Modal from '../../Modal';
-import { TextField, Button, IconButton } from '@material-ui/core';
+import { TextField, IconButton } from '@material-ui/core';
 import { styled } from '@material-ui/styles';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import { Link } from 'react-router-dom';
 import loginUser from '../../../actions/user/loginUser';
+import Button from '../../../components/Button';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -63,13 +64,13 @@ const SignUp = props => {
                         type="password"
                         onChange={(event) => handleInputChange(event, 'password')}
                     />
-                    <StyledButton
+                    <Button
                         color="primary"
                         fullWidth
                         onClick={handleRegisterBtnClick}
                     >
                         SIGN UP
-                    </StyledButton>
+                    </Button>
                     <span className="sign-up-form-sign-with">Or Sign up with:</span>
                 </div>
                 <div className="sign-up-form-social-wrapper">
@@ -97,16 +98,6 @@ export default compose(
     ),
     withRouter,
 )(SignUp);
-
-const StyledButton = styled(Button) ({
-    background: 'linear-gradient(40deg, #45cafc, #303f9f)',
-    borderRadius: 50,
-    boxShadow: '0 4px 5px 0 rgba(0,0,0,0.18), 0 4px 15px 0 rgba(0,0,0,0.15)',
-    color: 'white',
-    height: 48,
-    marginTop: '30px',
-    padding: '0 30px',
-});
 
 const StyledIconButton = styled(IconButton) ({
     borderRadius: 50,
