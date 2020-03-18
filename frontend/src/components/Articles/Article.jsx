@@ -48,7 +48,7 @@ const Article = props => {
                     padding: '0.5rem 0',
                     textAlign: 'center'}}
                 >
-                    <span className="card-item-category">{categories ? categories[0] : 'ni'}</span>
+                    <span className="card-item-category">{categories ? categories.join(', ') : ''}</span>
                 </div>
                 <CardActionArea
                     onClick={handleRedirection}

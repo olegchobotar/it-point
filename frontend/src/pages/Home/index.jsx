@@ -16,7 +16,6 @@ const Home = props =>  {
     },[]);
     return (
         <div>
-            {console.log(articles)}
             <Articles articles={articles}/>
         </div>
     )

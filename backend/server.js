@@ -30,6 +30,42 @@ app.post('/api/v1/companies', Companies.create);
 
 app.get('/api/v1/categories', Categories.getAll);
 
+// var xoauth2 = require('xoauth2');
+// xoauth2.on("token", function(token){
+//     console.log("User: ", token.user); // e-mail address
+//     console.log("New access token: ", token.accessToken);
+//     console.log("New access token timeout: ", token.timeout); // TTL in seconds
+// });
+// var nodemailer=require("nodemailer");
+// var smtpTransport = nodemailer.createTransport({
+//     service: "Gmail",
+//     use_authentication: true,
+//     auth: {
+//         xoauth2: xoauth2.createXOAuth2Generator({
+//             user: "butterflywebdev@gmail.com",
+//             pass: "xperiazl35"
+//         })
+//     }
+// });
+//
+// var mailOptions={
+//     to : "olegtchobotary2000@gmail.com",
+//     subject :"SUBJECT",
+//     text : "MESSAGE"
+// }
+//
+//
+// console.log(mailOptions);
+// smtpTransport.sendMail(mailOptions, function(error, response){
+//     if(error){
+//         console.log(error);
+//
+//     }else{
+//         console.log("Message sent: " + response.message);
+//
+//     }
+// });
+
 // Start server
 app.listen(process.env.PORT || 5000, () => {
     console.log(`app is running on port ${process.env.PORT || 5000}`)

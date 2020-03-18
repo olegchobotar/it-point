@@ -42,8 +42,17 @@ const ArticleCreator = props => {
     const [companyScope, setCompanyScope] = useState(false);
     const fetchAPI = async () => {
         const { data } = await axios.get('http://localhost:5000/api/v1/categories');
+        const categories = data.map(({ name }) => ({ id: name, text: name }));
         console.log(data);
-        setSuggestions(data);
+        setSuggestions(categories);
+    };
+
+    const clearFields = () => {
+        setTitle('');
+        setCategories([]);
+        setImageUrl('');
+        setContent('');
+        console.log(title)
     };
 
     useEffect( () => {
@@ -84,7 +93,8 @@ const ArticleCreator = props => {
                     'x-access-token': localStorage.token,
                 }
             });
-        console.log(result.data);
+        clearFields();
+        // console.log(result.data);
     };
 
     return (
@@ -95,6 +105,7 @@ const ArticleCreator = props => {
             <TextField
                 label="Title"
                 className="article-creator-full-width-input"
+                value={title}
                 onChange={event => setTitle(event.target.value)}
             />
             <div className="toggle-wrapper">
@@ -114,13 +125,14 @@ const ArticleCreator = props => {
             {/*/>*/}
             <TextField
                 label="Image URL"
+                value={imageUrl}
                 className="article-creator-full-width-input"
                 onChange={event => setImageUrl(event.target.value)}
             />
             <p>Categories</p>
             <ReactTags
                 tags={categories}
-                placeholder="Add new category"
+                placeholder="Enter category"
                 handleDelete={handleDelete}
                 handleAddition={handleAddition}
                 handleDrag={handleDrag}
@@ -131,6 +143,7 @@ const ArticleCreator = props => {
                 className="article-creator-full-width-input"
                 multiline
                 rows="5"
+                value={content}
                 onChange={event => setContent(event.target.value) }
             />
             <Button width="400px" onClick={publishArticle}>Publish</Button>

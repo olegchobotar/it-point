@@ -42,16 +42,13 @@ const Article = props => {
     const {
         id,
         title,
-        category,
+        categories,
         author,
-        imageUrl,
-        description,
-        date,
+        image_url: imageUrl,
+        content,
+        modified_date: date,
     } = article;
     const classes = useStyles();
-
-
-
     return (
         <div className='article-wrapper'>
             <Card mx="auto" className={classes.card}>
@@ -59,7 +56,7 @@ const Article = props => {
                     padding: '0.5rem 0',
                     textAlign: 'center'}}
                 >
-                    <span className="card-item-category">{category}</span>
+                    <span className="card-item-category">{categories ? categories.join(', ') : ''}</span>
                 </div>
                 <CardActionArea>
                     <CardMedia
@@ -90,7 +87,7 @@ const Article = props => {
                             color="textSecondary"
                             component="p"
                         >
-                            {description}
+                            {content}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

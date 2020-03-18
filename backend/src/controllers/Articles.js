@@ -76,17 +76,36 @@ const Articles = {
      * @returns {object} reflection object
      */
     async getOne(req, res) {
-        const text = 'SELECT * FROM reflections WHERE id = $1';
+        const text = `SELECT 
+       a.id, 
+       a.title, 
+       a.only_for_company,
+       a.image_url,
+       a.content,
+       a.created_date,
+       a.modified_date,
+       u.nickname as author,
+       c.categories
+       FROM articles as a 
+        INNER JOIN users AS u
+         ON a.author_id = u.id, LATERAL (
+           SELECT ARRAY(
+             SELECT name
+             FROM article_categories AS c
+             WHERE c.article_id = a.id
+             ) AS categories
+           ) c 
+        WHERE a.id = $1`;
+
         try {
-            // const { rows } = await db.query(text, [req.params.id]);
-            // if (!rows[0]) {
-            //     return res.status(404).send({'message': 'reflection not found'});
-            // }
-            return res.status(200).send(articles.find((article) => {
-                console.log(article.id);
-                return article.id === +req.params.id
-            }));
+            const { rows } = await db.query(text, [req.params.id]);
+            if (!rows[0]) {
+                return res.status(404).send({'message': 'Not found'});
+            }
+            console.log(rows[0])
+            return res.status(200).send(rows[0]);
         } catch(error) {
+            console.log(error)
             return res.status(400).send(error)
         }
     },
