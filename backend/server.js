@@ -27,44 +27,37 @@ app.post('/api/v1/articles', Articles.create);
 app.get('/api/v1/articles/:id', Articles.getOne);
 
 app.post('/api/v1/companies', Companies.create);
+app.get('/api/v1/companies/:id', Companies.getOne);
 
 app.get('/api/v1/categories', Categories.getAll);
 
-// var xoauth2 = require('xoauth2');
-// xoauth2.on("token", function(token){
-//     console.log("User: ", token.user); // e-mail address
-//     console.log("New access token: ", token.accessToken);
-//     console.log("New access token timeout: ", token.timeout); // TTL in seconds
-// });
-// var nodemailer=require("nodemailer");
-// var smtpTransport = nodemailer.createTransport({
-//     service: "Gmail",
-//     use_authentication: true,
-//     auth: {
-//         xoauth2: xoauth2.createXOAuth2Generator({
-//             user: "butterflywebdev@gmail.com",
-//             pass: "xperiazl35"
-//         })
-//     }
-// });
-//
-// var mailOptions={
-//     to : "olegtchobotary2000@gmail.com",
-//     subject :"SUBJECT",
-//     text : "MESSAGE"
-// }
-//
-//
-// console.log(mailOptions);
-// smtpTransport.sendMail(mailOptions, function(error, response){
-//     if(error){
+
+
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'butterflywebdev@gmail.com',
+        pass: 'xperiazl35'
+    }
+});
+
+const mailOptions = {
+    from: 'vindication@gmail.com',
+    to: 'melissa.matvienko@gmail.com ',
+    subject: 'It-Point Invitation',
+    text: `Username has invited you to Company`
+};
+
+// transporter.sendMail(mailOptions, function(error, info){
+//     if (error) {
 //         console.log(error);
-//
-//     }else{
-//         console.log("Message sent: " + response.message);
-//
+//     } else {
+//         console.log('Email sent: ' + info.response);
 //     }
 // });
+
 
 // Start server
 app.listen(process.env.PORT || 5000, () => {

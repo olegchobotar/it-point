@@ -8,7 +8,7 @@ const Categories = {
      * @returns {object} reflections array
      */
     async getAll(req, res) {
-        const findAllQuery = 'SELECT DISTINCT name FROM article_categories';
+        const findAllQuery = 'SELECT DISTINCT name AS id, name AS text FROM article_categories';
         try {
             const { rows } = await db.query(findAllQuery);
             return res.status(200).send(rows);

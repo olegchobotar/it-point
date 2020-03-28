@@ -42,9 +42,7 @@ const ArticleCreator = props => {
     const [companyScope, setCompanyScope] = useState(false);
     const fetchAPI = async () => {
         const { data } = await axios.get('http://localhost:5000/api/v1/categories');
-        const categories = data.map(({ name }) => ({ id: name, text: name }));
-        console.log(data);
-        setSuggestions(categories);
+        setSuggestions(data);
     };
 
     const clearFields = () => {

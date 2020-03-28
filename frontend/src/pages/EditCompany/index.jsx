@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import Modal from '../../components/Modal';
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@material-ui/core';
 import Button from '../../components/Button';
 import setCompany from '../../actions/company/setCompany';
 import CategoriesInput from '../../components/CategoriesInput';
+import UsersList from '../../components/UsersList';
 import './style.css';
 
 import axios from 'axios';
@@ -15,10 +15,23 @@ const EditCompany = props => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [categories, setCategories] = useState([]);
+    const [company, setCompany] = useState({});
 
-    const { company } = props;
+    const { companyId } = props;
 
-    console.log(categories);
+    useEffect( () => {
+        const fetchApi = async () => {
+            const { data } = await axios.get(`http://localhost:5000/api/v1/companies/${companyId}`, {
+                headers: {
+                    'x-access-token': localStorage.token,
+                }
+            });
+            setName(data.name);
+            setDescription(data.description || '');
+            setCompany(data);
+        };
+        fetchApi();
+    }, []);
 
     const handleDelete = currentIndex => {
         setCategories(categories.filter((tag, index) => index !== currentIndex))
@@ -46,14 +59,14 @@ const EditCompany = props => {
                     className="edit-company-input"
                     label="Company name"
                     color="primary"
-                    defaultValue={company.name}
+                    value={name}
                     onChange={(event) => {setName(event.target.value)}}
                 />
                 <TextField
                     className="edit-company-input"
                     label="Small description"
                     color="primary"
-                    defaultValue={company.description}
+                    value={description}
                     onChange={(event) => {setDescription(event.target.value)}}
                 />
                 <p>Add main categories</p>
@@ -64,6 +77,7 @@ const EditCompany = props => {
                     handleDrag={handleDrag}
                     handleAddition={handleAddition}
                 />
+                <UsersList />
                 <Button width="400px">
                     Save
                 </Button>
@@ -73,7 +87,7 @@ const EditCompany = props => {
 };
 
 const mapStateToProps = state => ({
-    company: state.Company.company,
+    companyId: state.Company.company.id,
 });
 
 export default compose(
