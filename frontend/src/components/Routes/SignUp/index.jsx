@@ -8,6 +8,7 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import { Link } from 'react-router-dom';
 import loginUser from '../../../actions/user/loginUser';
 import Button from '../../../components/Button';
+import { addBubble, Bubble } from '../../../basic/helpers/bubbles';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -33,12 +34,17 @@ const SignUp = props => {
         handler(event.target.value);
     };
 
-    const handleRegisterBtnClick = async () => {
-        const res = await axios.post('http://localhost:5000/api/v1/users',
-            {email, nickname, password});
-        props.loginUser(res.data.user);
-        localStorage.setItem('token', res.data.token);
-        props.history.push('/');
+    const handleRegisterBtnClick = () => {
+        axios.post('http://localhost:5000/api/v1/users',
+            {email, nickname, password})
+            .then(({ data }) => {
+                props.loginUser(data.user);
+                localStorage.setItem('token', data.token);
+                props.history.push('/');
+            })
+            .catch(({ response: { data: { message } } }) => {
+                addBubble(message, Bubble.Error)
+            });
     };
 
     return (

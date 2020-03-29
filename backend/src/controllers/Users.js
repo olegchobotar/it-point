@@ -4,18 +4,12 @@ import { isValidEmail, generateToken, getUserData } from '../helpers/user';
 import { hashValue, compareHashedValue } from '../helpers/hash';
 
 const Users = {
-    /**
-     * Create A User
-     * @param {object} req
-     * @param {object} res
-     * @returns {object} reflection object
-     */
     async create(req, res) {
         if (!req.body.email || !req.body.password) {
             return res.status(400).send({'message': 'Some values are missing'});
         }
         if (!isValidEmail(req.body.email)) {
-            return res.status(200).send({ 'message': 'Please enter a valid email address' });
+            return res.status(400).send({ 'message': 'Please enter a valid email address' });
         }
         const hashedPassword = hashValue(req.body.password);
         const createQuery = `INSERT INTO
@@ -37,18 +31,12 @@ const Users = {
             return res.status(201).send({ token, user: getUserData(user) });
         } catch(error) {
             if (error.routine === '_bt_check_unique') {
-                return res.status(400).send({ 'message': 'User with that EMAIL already exist' })
+                console.log(error);
+                return res.status(400).send({ 'message': 'User with that email or nickname already exist' })
             }
-            console.log(error)
             return res.status(400).send(error);
         }
     },
-    /**
-     * Login
-     * @param {object} req
-     * @param {object} res
-     * @returns {object} user object
-     */
     async login(req, res) {
         if (!req.body.email || !req.body.password) {
             return res.status(400).send({'message': 'Some values are missing'});
@@ -69,8 +57,9 @@ const Users = {
                 return res.status(400).send({ 'message': 'The credentials you provided is incorrect' });
             }
 
-            const getRelatedCompanyQuery = 'SELECT * FROM companies WHERE owner_id = $1';
-            const { rows: company } = await db.query(getRelatedCompanyQuery, [user.id]);
+            console.log(user)
+            const getRelatedCompanyQuery = 'SELECT * FROM companies WHERE id = $1';
+            const { rows: company } = await db.query(getRelatedCompanyQuery, [user.company_id]);
 
             const token = generateToken(user.id);
             return res.status(200).send({ token, user: getUserData(user), company: company[0] });
@@ -88,12 +77,6 @@ const Users = {
             return res.status(400).send(error)
         }
     },
-    /**
-     * Delete A User
-     * @param {object} req
-     * @param {object} res
-     * @returns {void} return status code 204
-     */
     async delete(req, res) {
         const deleteQuery = 'DELETE FROM users WHERE id=$1 returning *';
         try {
@@ -106,6 +89,6 @@ const Users = {
             return res.status(400).send(error);
         }
     }
-}
+};
 
 export default Users;

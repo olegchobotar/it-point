@@ -11,6 +11,7 @@ import axios from "axios";
 import {styled} from "@material-ui/styles";
 import Button from './../../components/Button';
 import {connect} from "react-redux";
+import {addBubble, Bubble} from "../../basic/helpers/bubbles";
 
 const KeyCodes = {
     comma: 188,
@@ -85,14 +86,18 @@ const ArticleCreator = props => {
             content,
             categories: categories.map(category => category.text),
         };
-        const result = await axios.post('http://localhost:5000/api/v1/articles', params,
-            {
-                headers: {
-                    'x-access-token': localStorage.token,
-                }
+        axios.post('http://localhost:5000/api/v1/articles', params,             {
+            headers: {
+                'x-access-token': localStorage.token,
+            }
+        })
+            .then(() => {
+                addBubble('Published');
+                clearFields();
+            })
+            .catch(({ response: { data: { message } } }) => {
+                addBubble(message, Bubble.Error)
             });
-        clearFields();
-        // console.log(result.data);
     };
 
     return (

@@ -7,6 +7,7 @@ import UsersList from '../../components/UsersList';
 import SendIcon from '@material-ui/icons/Send';
 import CopyIcon from '@material-ui/icons/FileCopy';
 import copy from 'copy-to-clipboard';
+import { addBubble, Bubble } from '../../basic/helpers/bubbles';
 import './style.css';
 
 import axios from 'axios';
@@ -43,12 +44,14 @@ const EditCompany = props => {
         if (!invitationLink) {
             const { data } = await axios.post(`http://localhost:5000/api/v1/companies/${companyId}/invitations`, { companyId });
             setInvitationLink(`http://localhost:3000/company/verify?token=${data.hashedValue}`);
+            addBubble('Generated');
         }
     };
 
     const addToClipboard = event => {
         event.stopPropagation();
         copy(invitationLink);
+        addBubble('Copied');
     };
     
     const sendInvitation = async () => {

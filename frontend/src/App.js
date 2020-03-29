@@ -10,6 +10,8 @@ import CreateCompany from './components/Routes/CreateCompany';
 import EditCompany from './pages/EditCompany';
 import ArticleCreator from './pages/ArticleCreator';
 import CompanyInvitation from './pages/CompanyInvitation';
+import { NotificationContainer } from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 import isValidToken from './actions/user/isValidToken';
 
 import './App.css';
@@ -23,6 +25,7 @@ function App(props) {
         <div className="App">
             <Router>
                 <Header/>
+                <NotificationContainer />
                 <Route exact path="/" component={Home}/>
                 <Route exact path="/articles/:id" component={Article}/>
                 <Route exact path="/article-creator" component={ArticleCreator}/>

@@ -8,6 +8,9 @@ const Articles = {
     async create(req, res) {
         const { title, onlyForCompany, imageUrl, content, categories } = req.body;
 
+        if (!title || !content || !categories.length) {
+            return res.status(400).send({ 'message': 'Some values are missing' });
+        }
         const token = req.headers['x-access-token'];
         if(!token) {
             return res.status(400).send({ 'message': 'Token is not provided' });
@@ -41,12 +44,6 @@ const Articles = {
             return res.status(400).send(error);
         }
     },
-    /**
-     * Get All Reflection
-     * @param {object} req
-     * @param {object} res
-     * @returns {object} reflections array
-     */
     async getAll(req, res) {
         const findAllQuery = `
             SELECT a.id, a.title, a.only_for_company, a.image_url, a.content, a.created_date, u.nickname AS author, c.categories 
@@ -69,12 +66,6 @@ const Articles = {
             return res.status(400).send(error);
         }
     },
-    /**
-     * Get A Reflection
-     * @param {object} req
-     * @param {object} res
-     * @returns {object} reflection object
-     */
     async getOne(req, res) {
         const text = `SELECT 
        a.id, 
@@ -109,12 +100,6 @@ const Articles = {
             return res.status(400).send(error)
         }
     },
-    /**
-     * Update A Reflection
-     * @param {object} req
-     * @param {object} res
-     * @returns {object} updated reflection
-     */
     async update(req, res) {
         const findOneQuery = 'SELECT * FROM reflections WHERE id=$1';
         const updateOneQuery =`UPDATE reflections
@@ -138,12 +123,6 @@ const Articles = {
             return res.status(400).send(err);
         }
     },
-    /**
-     * Delete A Reflection
-     * @param {object} req
-     * @param {object} res
-     * @returns {void} return statuc code 204
-     */
     async delete(req, res) {
         const deleteQuery = 'DELETE FROM reflections WHERE id=$1 returning *';
         try {
@@ -156,6 +135,6 @@ const Articles = {
             return res.status(400).send(error);
         }
     }
-}
+};
 
 export default Articles;

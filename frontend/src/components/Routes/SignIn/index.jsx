@@ -9,20 +9,23 @@ import loginUser from '../../../actions/user/loginUser';
 import './styles.css';
 
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
+import { addBubble, Bubble } from '../../../basic/helpers/bubbles';
 import { withRouter } from 'react-router';
 
 const SignIn = props => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const handleLoginBtnClick = async () => {
-        props.loginUser(email, password).then(
-            () => {
-                props.history.push('/');
-            }
-        );
+        props.loginUser(email, password)
+            .then(
+                () => {
+                    props.history.push('/');
+                })
+            .catch(({ response: { data: { message } } }) => {
+                addBubble(message, Bubble.Error)
+            });
     };
     return (
         <Modal title="Sign in">
