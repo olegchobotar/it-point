@@ -69,9 +69,9 @@ class Modal extends React.Component {
             <Wrapper className="modal-wrapper" height={this.props.height}>
                 <div className="modal-header">
                     <h3>{this.props.title}</h3>
-                    <IconButton onClick={this.handleClose}>
+                    {this.props.exitIcon && <IconButton onClick={this.handleClose}>
                         <CloseIcon />
-                    </IconButton>
+                    </IconButton>}
                 </div>
                 {this.props.children}
             </Wrapper>
@@ -83,10 +83,12 @@ class Modal extends React.Component {
 Modal.propTypes = {
     title: PropTypes.string.isRequired,
     height: PropTypes.string,
+    exitIcon: PropTypes.bool,
 };
 
 Modal.defaultProps = {
-  height: '420px',
+    height: '420px',
+    exitIcon: true,
 };
 
 const Wrapper = styled.div`

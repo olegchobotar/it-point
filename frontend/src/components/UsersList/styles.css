@@ -1,0 +1,23 @@
+.user-list-wrapper {
+    width: 500px;
+}
+
+.user-list-add-icon {
+    color: #374bc7;
+}
+
+.user-list-header {
+    margin-top: 1rem;
+}
+
+.user-list-item {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #eee;
+}
+
+.user-list-invitation-input {
+    width: 300px;
+    margin-right: 1rem !important;
+}
+

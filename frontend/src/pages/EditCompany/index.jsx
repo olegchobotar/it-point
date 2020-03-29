@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { TextField } from '@material-ui/core';
+import {IconButton, TextField, Input} from '@material-ui/core';
 import Button from '../../components/Button';
 import setCompany from '../../actions/company/setCompany';
 import CategoriesInput from '../../components/CategoriesInput';
 import UsersList from '../../components/UsersList';
+import SendIcon from '@material-ui/icons/Send';
+import CopyIcon from '@material-ui/icons/FileCopy';
+import copy from 'copy-to-clipboard';
 import './style.css';
 
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import {withRouter} from "react-router";
+import InputAdornment from "@material-ui/core/InputAdornment";
 
 const EditCompany = props => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [email, setEmail] = useState('');
     const [categories, setCategories] = useState([]);
+    const [invitationLink, setInvitationLink] = useState('');
     const [company, setCompany] = useState({});
 
     const { companyId } = props;
@@ -33,6 +39,30 @@ const EditCompany = props => {
         fetchApi();
     }, []);
 
+    const generateInvitationLink = async () => {
+        if (!invitationLink) {
+            const { data } = await axios.post(`http://localhost:5000/api/v1/companies/${companyId}/invitations`, { companyId });
+            setInvitationLink(`http://localhost:3000/company/verify?token=${data.hashedValue}`);
+        }
+    };
+
+    const addToClipboard = event => {
+        event.stopPropagation();
+        copy(invitationLink);
+    };
+    
+    const sendInvitation = async () => {
+        if (!invitationLink) {
+            await generateInvitationLink();
+        } 
+        const { data } = await axios.post(`http://localhost:5000/api/v1/invitations/send`, { email, invitationLink }, {
+            headers: {
+                'x-access-token': localStorage.token,
+            }
+        });
+        console.log(data);
+    };
+    
     const handleDelete = currentIndex => {
         setCategories(categories.filter((tag, index) => index !== currentIndex))
     };
@@ -77,7 +107,36 @@ const EditCompany = props => {
                     handleDrag={handleDrag}
                     handleAddition={handleAddition}
                 />
-                <UsersList />
+                <UsersList companyId={companyId}/>
+                <div>
+                    <div className="user-list-link-wrapper">
+                        <Input
+                            className="user-list-invitation-input"
+                            color="primary"
+                            placeholder="Click to generate invitation link"
+                            disabled={true}
+                            value={invitationLink}
+                            onClick={generateInvitationLink}
+                            endAdornment={
+                                invitationLink &&
+                                <InputAdornment position="end">
+                                    <IconButton onClick={addToClipboard}>
+                                        <CopyIcon />
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                        />
+                    </div>
+                    <TextField
+                        className="user-list-invitation-input"
+                        label="Enter email to send invitation"
+                        color="primary"
+                        onChange={(event) => {setEmail(event.target.value)}}
+                    />
+                    <IconButton onClick={sendInvitation}>
+                        <SendIcon className="user-list-add-icon"/>
+                    </IconButton>
+                </div>
                 <Button width="400px">
                     Save
                 </Button>

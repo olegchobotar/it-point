@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS users
   created_date  TIMESTAMP,
   modified_date TIMESTAMP
 );
+
 CREATE TABLE IF NOT EXISTS companies
 (
   id            SERIAL PRIMARY KEY,
@@ -18,7 +19,6 @@ CREATE TABLE IF NOT EXISTS companies
   modified_date TIMESTAMP,
   FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
 );
-
 
 CREATE TABLE IF NOT EXISTS articles
 (
@@ -40,9 +40,11 @@ CREATE TABLE IF NOT EXISTS article_categories
   name VARCHAR(50) NOT NULL
 );
 
--- CREATE TABLE IF NOT EXISTS categories_to_articles
--- (
---   article_id INT REFERENCES articles ON DELETE CASCADE,
---   category_id INT REFERENCES categories ON DELETE CASCADE,
---   PRIMARY KEY (article_id, category_id)
--- )
+CREATE TABLE IF NOT EXISTS invitations
+(
+  id   SERIAL PRIMARY KEY,
+  company_id INT NOT NULL UNIQUE,
+  token VARCHAR(80) NOT NULL,
+  expired_at TIMESTAMP NOT NULL,
+  FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE CASCADE
+);

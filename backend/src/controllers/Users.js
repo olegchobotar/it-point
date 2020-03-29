@@ -1,13 +1,7 @@
 import moment from 'moment';
-import uuidv4 from 'uuid/v4';
 import db from '../db';
-import {
-    hashPassword,
-    comparePassword,
-    isValidEmail,
-    generateToken,
-    getUserData,
-} from '../helpers/user';
+import { isValidEmail, generateToken, getUserData } from '../helpers/user';
+import { hashValue, compareHashedValue } from '../helpers/hash';
 
 const Users = {
     /**
@@ -23,7 +17,7 @@ const Users = {
         if (!isValidEmail(req.body.email)) {
             return res.status(200).send({ 'message': 'Please enter a valid email address' });
         }
-        const hashedPassword = hashPassword(req.body.password);
+        const hashedPassword = hashValue(req.body.password);
         const createQuery = `INSERT INTO
       users(nickname, email, password, created_date, modified_date)
       VALUES($1, $2, $3, $4, $5)
@@ -62,15 +56,16 @@ const Users = {
         if (!isValidEmail(req.body.email)) {
             return res.status(400).send({ 'message': 'Please enter a valid email address' });
         }
+        console.log(hashValue(req.body.password))
         const text = 'SELECT * FROM users WHERE email = $1';
         try {
             const { rows } = await db.query(text, [req.body.email]);
+            console.log(rows);
             const user = rows[0];
-            console.log(rows)
-            if (!rows[0]) {
+            if (!user) {
                 return res.status(400).send({'message': 'The credentials you provided is incorrect'});
             }
-            if(!comparePassword(user.password, req.body.password)) {
+            if(!compareHashedValue(user.password, req.body.password)) {
                 return res.status(400).send({ 'message': 'The credentials you provided is incorrect' });
             }
 
@@ -79,6 +74,16 @@ const Users = {
 
             const token = generateToken(user.id);
             return res.status(200).send({ token, user: getUserData(user), company: company[0] });
+        } catch(error) {
+            return res.status(400).send(error)
+        }
+    },
+    async getCompanyUsers(req, res) {
+        const query = 'SELECT * FROM users WHERE company_id = $1';
+        try {
+            const { rows: users } = await db.query(query, [req.params.id]);
+            console.log(users)
+            return res.status(200).send({ users });
         } catch(error) {
             return res.status(400).send(error)
         }

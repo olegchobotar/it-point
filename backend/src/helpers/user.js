@@ -1,11 +1,4 @@
-import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
-export const hashPassword = password =>
-    bcrypt.hashSync(password, bcrypt.genSaltSync(8));
-
-export const comparePassword = (hashedPassword, password) =>
-    bcrypt.compareSync(password, hashedPassword);
 
 export const isValidEmail = (email) => {
     return /\S+@\S+\.\S+/.test(email);
@@ -18,7 +11,8 @@ export const generateToken = id =>
         process.env.SECRET, { expiresIn: '7d' }
     );
 
-export const getUserData = ({nickname, email, created_date, modified_date }) => ({
+export const getUserData = ({id, nickname, email, created_date, modified_date }) => ({
+    id,
     nickname,
     email,
     created_date,

@@ -14,3 +14,20 @@
     flex-direction: column;
     align-items: flex-start;
 }
+
+.user-list-link-wrapper {
+    margin-top: 1rem;
+    display: flex;
+}
+
+.user-list-check-icon {
+    color: #16b500;
+}
+
+.user-list-link-wrapper input {
+}
+
+.user-list-link-wrapper input, .user-list-link-wrapper input::placeholder {
+    opacity: 0.7;
+    color: #000000;
+}

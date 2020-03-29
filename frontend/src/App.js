@@ -9,6 +9,7 @@ import Settings from './components/Routes/Settings';
 import CreateCompany from './components/Routes/CreateCompany';
 import EditCompany from './pages/EditCompany';
 import ArticleCreator from './pages/ArticleCreator';
+import CompanyInvitation from './pages/CompanyInvitation';
 import isValidToken from './actions/user/isValidToken';
 
 import './App.css';
@@ -30,6 +31,7 @@ function App(props) {
                 <Route path="/settings" component={Settings}/>
                 <Route path="/create-company" component={CreateCompany}/>
                 <Route path="/edit-company" component={EditCompany}/>
+                <Route path="/company/verify/" component={CompanyInvitation}/>
             </Router>
         </div>
     );
