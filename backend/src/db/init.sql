@@ -14,11 +14,14 @@ CREATE TABLE IF NOT EXISTS companies
   id            SERIAL PRIMARY KEY,
   name          VARCHAR(50) UNIQUE NOT NULL,
   description   VARCHAR(255),
+  categories    VARCHAR[],
   created_date  TIMESTAMP,
   owner_id      INT               NOT NULL,
   modified_date TIMESTAMP,
   FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
+ALTER TABLE users ADD FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE SET NULL;
 
 CREATE TABLE IF NOT EXISTS articles
 (
@@ -30,7 +33,7 @@ CREATE TABLE IF NOT EXISTS articles
   created_date TIMESTAMP,
   modified_date TIMESTAMP,
   author_id INT NOT NULL,
-  FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE CASCADE
+  FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS article_categories

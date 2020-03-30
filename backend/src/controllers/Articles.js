@@ -19,7 +19,7 @@ const Articles = {
         const articlesText = `
             INSERT INTO articles(title, only_for_company, image_url, content, created_date, modified_date, author_id)
             VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id;
-        `;
+        `;t
 
         const values = [
             title,
@@ -120,6 +120,7 @@ const Articles = {
             const response = await db.query(updateOneQuery, values);
             return res.status(200).send(response.rows[0]);
         } catch(err) {
+            console.log(error);
             return res.status(400).send(err);
         }
     },
@@ -132,6 +133,7 @@ const Articles = {
             }
             return res.status(204).send({ 'message': 'deleted' });
         } catch(error) {
+            console.log(error);
             return res.status(400).send(error);
         }
     }

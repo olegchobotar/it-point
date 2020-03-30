@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import Modal from '../../components/Modal';
 import Button from '../../components/Button';
+import { addBubble, Bubble } from '../../basic/helpers/bubbles';
 import setCompany from '../../actions/company/setCompany';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -16,23 +17,38 @@ const CompanyInvitation = props => {
     const token = query.get('token');
 
     useEffect(() => {
-        const fetchApi = async () => {
-            const { data } = await axios.get(`http://localhost:5000/api/v1/invitations/${token}`);
-            setCompanyName(data.name);
-        };
-        fetchApi();
-    });
+        if (!Object.entries(props.currentUser).length) {
+            addBubble('Please log in', Bubble.Error);
+            props.history.push('/');
+        } else if (props.company) {
+            addBubble('You are already a member of another company', Bubble.Error);
+            props.history.push('/');
+        }
 
-    const joinCompany = async () => {
-        const { data } = await axios.post(`http://localhost:5000/api/v1/invitations`, { token }, {
+        axios.get(`http://localhost:5000/api/v1/invitations/${token}`)
+            .then(({ data }) => {
+                setCompanyName(data.name);
+            })
+            .catch(({ response: { data: { message } } }) => {
+                addBubble(message, Bubble.Error);
+                props.history.push('/');
+            });
+    }, []);
+
+    const joinCompany = () => {
+        axios.post(`http://localhost:5000/api/v1/invitations`, { token }, {
             headers: {
                 'x-access-token': localStorage.token,
             }
-        });
-        if (data) {
-            props.setCompany(data);
-            props.history.push('/');
-        }
+        })
+            .then(({ data }) => {
+                addBubble(`Welcome new ${data.name} member`);
+                props.setCompany(data);
+                props.history.push('/');
+            })
+            .catch(({ response: { data: { message } } }) => {
+                addBubble(message, Bubble.Error);
+            });
     };
 
     return (
@@ -43,10 +59,15 @@ const CompanyInvitation = props => {
     );
 };
 
+const mapStateToProps = state => ({
+    currentUser: state.User.currentUser,
+    company: state.Company.company,
+});
+
 export default compose(
     withRouter,
     connect(
-        null,
+        mapStateToProps,
         { setCompany },
     ),
 )(CompanyInvitation);

@@ -2,41 +2,48 @@ import moment from 'moment';
 import db from '../db';
 import { hashValue, compareHashedValue } from '../helpers/hash';
 import send from '../helpers/sendInvitation'
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
+import { isValidEmail } from '../helpers/user';
 
 const Invitations = {
     async generateInvitation(req, res) {
-        const hashedValue = hashValue(req.params.id);
-        console.log(hashedValue);
+        if (!req.params.id) {
+            return res.status(400).send({'message': 'Company id is missing'});
+        }
+        const hashedValue = hashValue(req.params.id).replace('/', 'dash');
 
         const createQuery = `INSERT INTO
-           invitations(company_id, expired_at)
-           VALUES($1, $2)
+           invitations(company_id, token, expired_at)
+           VALUES($1, $2, $3)
            ON CONFLICT (company_id) DO UPDATE 
-              SET expired_at = $2`;
+              SET expired_at = $3 RETURNING token`;
 
         const expiredAt = Date.now() + 7 * 24 * 3600 * 1000;
         const values = [
             req.params.id,
+            hashedValue,
             moment(expiredAt),
         ];
 
         try {
-            await db.query(createQuery, values);
-            return res.status(201).send({ hashedValue, expiredAt });
+            const { rows } = await db.query(createQuery, values);
+            return res.status(201).send({ token: rows[0].token, expiredAt });
         } catch(error) {
-            console.log(error)
+            console.log(error);
             return res.status(400).send(error);
         }
     },
     async sendInvitation(req, res) {
         const token = req.headers['x-access-token'];
-        if(!token) {
+        if (!token) {
             return res.status(400).send({ 'message': 'Token is not provided' });
         }
 
         if (!req.body.invitationLink || !req.body.email) {
-            return res.status(400).send({'message': 'Something is missing'});
+            return res.status(400).send({'message': 'Email is missing'});
+        }
+        if (!isValidEmail(req.body.email)) {
+            return res.status(400).send({ 'message': 'Please enter a valid email address' });
         }
         const decoded = await jwt.verify(token, process.env.SECRET);
 
@@ -90,12 +97,13 @@ const Invitations = {
         try {
             const { rows } = await db.query(query, values);
             const value = rows[0];
+            console.log(value);
             if (!value) {
-                return res.status(400).send({'message': 'Token is wrong or expired'});
+                return res.status(400).send({'message': 'Token is wrong or expired', value: rows});
             }
             return res.status(200).send(value);
         } catch(error) {
-            console.log(error)
+            console.log(error);
             return res.status(400).send(error);
         }
 
@@ -104,6 +112,7 @@ const Invitations = {
         if (!req.body.token) {
             return res.status(400).send({ 'message': 'Invitation token is not provided' });
         }
+
         const userToken = req.headers['x-access-token'];
         if (!userToken) {
             return res.status(400).send({ 'message': 'User token is not provided' });
@@ -131,7 +140,7 @@ const Invitations = {
             }
             return res.status(200).send(value);
         } catch(error) {
-            console.log(error)
+            console.log(error);
             return res.status(400).send(error);
         }
 

@@ -1,5 +1,4 @@
 import moment from 'moment';
-import { getUserData } from '../helpers/user';
 import jwt from 'jsonwebtoken';
 import db from '../db';
 
@@ -9,12 +8,12 @@ const Companies = {
             return res.status(400).send({'message': 'Id is missing'});
         }
         const token = req.headers['x-access-token'];
-        if(!token) {
-            return res.status(403).send({ 'message': 'Forbidden' });
+        if (!token) {
+            return res.status(403).send({ 'message': 'You don`t have access' });
         }
 
         const query = `            
-            SELECT c.id, c.name, c.description, c.created_date, c.owner_id, u.users
+            SELECT c.id, c.name, c.description, c.created_date, c.owner_id, c.categories, u.users
              FROM companies AS c,
                   LATERAL (
                     SELECT ARRAY(
@@ -27,11 +26,16 @@ const Companies = {
 
         try {
             const { rows } = await db.query(query, [req.params.id]);
-            return res.status(200).send({...rows[0]});
+            const company = {
+              ...rows[0],
+              categories: rows[0].categories.map(category => ({ id: category, text: category })),
+            };
+            return res.status(200).send({ company });
         } catch(error) {
             if (error.routine === '_bt_check_unique') {
                 return res.status(400).send({ 'message': 'Company with that name already exist' })
             }
+            console.log(error);
             return res.status(400).send(error);
         }
 
@@ -61,7 +65,6 @@ const Companies = {
 
         try {
             const { rows } = await db.query(createQuery, values);
-            console.log(rows);
             await db.query(updateUserQuery, [rows[0].id, decoded.userId]);
 
             return res.status(201).send(rows[0]);
@@ -69,22 +72,75 @@ const Companies = {
             if (error.routine === '_bt_check_unique') {
                 return res.status(400).send({ 'message': 'Company with that name already exist' })
             }
+            console.log(error);
             return res.status(400).send(error);
         }
     },
+    async update(req, res) {
+        const { name, description, categories } = req.body;
+        if (!req.params.id) {
+            return res.status(400).send({'message': 'Id is missing'});
+        }
+        if (!name) {
+            return res.status(400).send({'message': 'Name is missing'});
+        }
+        const token = req.headers['x-access-token'];
+        if (!token) {
+            return res.status(400).send({ 'message': 'Token is not provided' });
+        }
+        const decoded = await jwt.verify(token, process.env.SECRET);
 
-    async delete(req, res) {
-        const deleteQuery = 'DELETE FROM companies WHERE id=$1 returning *';
+        const query = `UPDATE companies 
+          set name = $1,
+              description = $2,
+              categories = $3,
+              modified_date = $4
+          WHERE id = $5 AND owner_id = $6 RETURNING *`;
+
+        const values = [
+            name,
+            description,
+            categories,
+            moment(new Date()),
+            req.params.id,
+            decoded.userId,
+        ];
         try {
-            const { rows } = await db.query(deleteQuery, [req.company.id]);
-            if(!rows[0]) {
-                return res.status(404).send({'message': 'company not found'});
+            const { rows } = await db.query(query, values);
+            if (!rows[0]) {
+                return res.status(403).send({'message': 'You don`t have permission'});
             }
-            return res.status(204).send({ 'message': 'deleted' });
+            return res.status(200).send({ success: true });
         } catch(error) {
+            if (error.routine === '_bt_check_unique') {
+                return res.status(400).send({ 'message': 'Company with that name already exist' })
+            }
+            console.log(error);
+            return res.status(400).send(error);
+        }
+    },
+    async delete(req, res) {
+        const token = req.headers['x-access-token'];
+        const decoded = await jwt.verify(token, process.env.SECRET);
+
+        if (!token) {
+            return res.status(403).send({ 'message': 'You don`t have access' });
+        }
+        if (!req.params.id) {
+            return res.status(400).send({'message': 'Id is missing'});
+        }
+        const deleteQuery = 'DELETE FROM companies WHERE id = $1 AND owner_id = $2 returning *';
+        try {
+            const { rows } = await db.query(deleteQuery, [req.params.id, decoded.userId]);
+            if (!rows[0]) {
+                return res.status(404).send({'message': 'Company not found or you don`t have permission'});
+            }
+            return res.status(204).send({ 'message': 'Deleted' });
+        } catch(error) {
+            console.log(error);
             return res.status(400).send(error);
         }
     }
-}
+};
 
 export default Companies;

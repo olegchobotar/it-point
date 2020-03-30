@@ -34,6 +34,7 @@ const Users = {
                 console.log(error);
                 return res.status(400).send({ 'message': 'User with that email or nickname already exist' })
             }
+            console.log(error);
             return res.status(400).send(error);
         }
     },
@@ -64,6 +65,7 @@ const Users = {
             const token = generateToken(user.id);
             return res.status(200).send({ token, user: getUserData(user), company: company[0] });
         } catch(error) {
+            console.log(error);
             return res.status(400).send(error)
         }
     },
@@ -71,21 +73,24 @@ const Users = {
         const query = 'SELECT * FROM users WHERE company_id = $1';
         try {
             const { rows: users } = await db.query(query, [req.params.id]);
-            console.log(users)
             return res.status(200).send({ users });
         } catch(error) {
+            console.log(error);
             return res.status(400).send(error)
         }
     },
     async delete(req, res) {
-        const deleteQuery = 'DELETE FROM users WHERE id=$1 returning *';
+        console.log(req.user, res)
+        const deleteQuery = 'DELETE FROM users WHERE id = $1 returning *';
         try {
             const { rows } = await db.query(deleteQuery, [req.user.id]);
-            if(!rows[0]) {
-                return res.status(404).send({'message': 'user not found'});
+            console.log(rows);
+            if (!rows[0]) {
+                return res.status(404).send({'message': 'User not found'});
             }
-            return res.status(204).send({ 'message': 'deleted' });
+            return res.status(204).send({ 'success': true });
         } catch(error) {
+            console.log(error);
             return res.status(400).send(error);
         }
     }

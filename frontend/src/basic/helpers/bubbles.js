@@ -3,6 +3,7 @@ import { NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
 export const addBubble = (title, type, message = '', timeOut = 3000) => {
+    title = title ? title : 'Something went wrong';
     switch (type) {
         case 'info':
             NotificationManager.info(title, message, timeOut);

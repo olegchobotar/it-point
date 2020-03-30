@@ -21,8 +21,8 @@ const UsersList = props => {
                 <strong>Users List</strong>
             </div>
             <div className="user-list-wrapper">
-                {users.map(user => (
-                    <div className="user-list-item">
+                {users.map((user, key) => (
+                    <div key={key} className="user-list-item">
                         <p>{user.nickname}</p>
                         <p>{user.email}</p>
                   </div>

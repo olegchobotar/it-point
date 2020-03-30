@@ -28,12 +28,14 @@ app.get('/api/v1/articles/:id', Articles.getOne);
 
 app.post('/api/v1/companies', Companies.create);
 app.get('/api/v1/companies/:id', Companies.getOne);
+app.delete('/api/v1/companies/:id', Companies.delete);
+app.put('/api/v1/companies/:id', Companies.update);
 app.get('/api/v1/companies/:id/users', Users.getCompanyUsers);
 app.post('/api/v1/companies/:id/invitations', Invitations.generateInvitation);
 
 app.post('/api/v1/invitations/send', Invitations.sendInvitation);
 app.get('/api/v1/invitations/:token', Invitations.getInvitationInfo);
-app.post('/api/v1/invitations/', Invitations.AcceptInvitation);
+app.post('/api/v1/invitations', Invitations.AcceptInvitation);
 
 app.get('/api/v1/categories', Categories.getAll);
 

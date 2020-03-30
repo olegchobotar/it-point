@@ -23,28 +23,41 @@ const EditCompany = props => {
     const [categories, setCategories] = useState([]);
     const [invitationLink, setInvitationLink] = useState('');
     const [company, setCompany] = useState({});
+    const [disabledSendBtn, setDisabledSendBtn] = useState(false);
 
     const { companyId } = props;
 
     useEffect( () => {
         const fetchApi = async () => {
-            const { data } = await axios.get(`http://localhost:5000/api/v1/companies/${companyId}`, {
+            axios.get(`http://localhost:5000/api/v1/companies/${companyId}`, {
                 headers: {
                     'x-access-token': localStorage.token,
                 }
-            });
-            setName(data.name);
-            setDescription(data.description || '');
-            setCompany(data);
+            })
+                .then(({ data: { company } }) => {
+                    setName(company.name);
+                    setDescription(company.description || '');
+                    setCategories(company.categories);
+                    setCompany(company);
+                })
+                .catch(({ response: { data: { message } } }) => {
+                    addBubble(message, Bubble.Error);
+                    props.history.goBack();
+                });
         };
         fetchApi();
     }, []);
 
     const generateInvitationLink = async () => {
         if (!invitationLink) {
-            const { data } = await axios.post(`http://localhost:5000/api/v1/companies/${companyId}/invitations`, { companyId });
-            setInvitationLink(`http://localhost:3000/company/verify?token=${data.hashedValue}`);
-            addBubble('Generated');
+            axios.post(`http://localhost:5000/api/v1/companies/${companyId}/invitations`, { companyId })
+                .then(({ data: { token } }) => {
+                    setInvitationLink(`http://localhost:3000/company/verify?token=${token}`);
+                    addBubble('Generated');
+                })
+                .catch(({ response: { data: { message } } }) => {
+                    addBubble(message, Bubble.Error);
+                });
         }
     };
 
@@ -55,19 +68,32 @@ const EditCompany = props => {
     };
     
     const sendInvitation = async () => {
+        setDisabledSendBtn(true);
         if (!invitationLink) {
             await generateInvitationLink();
-        } 
-        const { data } = await axios.post(`http://localhost:5000/api/v1/invitations/send`, { email, invitationLink }, {
+        }
+        invitationLink && axios.post(`http://localhost:5000/api/v1/invitations/send`, { email, invitationLink }, {
             headers: {
                 'x-access-token': localStorage.token,
             }
-        });
-        console.log(data);
+        })
+            .then(() => {
+                setEmail('');
+                addBubble('Sent');
+            })
+            .catch(({ response: { data: { message } } }) => {
+                setDisabledSendBtn(false);
+                addBubble(message, Bubble.Error);
+            });
     };
     
     const handleDelete = currentIndex => {
         setCategories(categories.filter((tag, index) => index !== currentIndex))
+    };
+
+    const handleEmailChange = event => {
+        setDisabledSendBtn(false);
+        setEmail(event.target.value)
     };
 
     const handleAddition = category => {
@@ -81,6 +107,23 @@ const EditCompany = props => {
 
         setCategories(newCategories);
     };
+
+    const handleSave = () => {
+        const categoriesToSend = categories.map(({ text }) => text);
+        axios.put(`http://localhost:5000/api/v1/companies/${companyId}`,
+            { name, description, categories: categoriesToSend }, {
+                headers: {
+                    'x-access-token': localStorage.token,
+                }
+            })
+            .then(() => {
+                addBubble('Updated');
+            })
+            .catch(({ response: { data: { message } } }) => {
+                addBubble(message, Bubble.Error);
+            });
+    };
+    console.log(categories);
 
     return (
         <div className="edit-company-wrapper">
@@ -134,13 +177,14 @@ const EditCompany = props => {
                         className="user-list-invitation-input"
                         label="Enter email to send invitation"
                         color="primary"
-                        onChange={(event) => {setEmail(event.target.value)}}
+                        value={email}
+                        onChange={handleEmailChange}
                     />
-                    <IconButton onClick={sendInvitation}>
+                    <IconButton onClick={sendInvitation} disabled={disabledSendBtn}>
                         <SendIcon className="user-list-add-icon"/>
                     </IconButton>
                 </div>
-                <Button width="400px">
+                <Button width="400px" onClick={handleSave}>
                     Save
                 </Button>
             </div>
