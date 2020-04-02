@@ -14,7 +14,6 @@ const Auth = {
             if (!rows[0]) {
                 return res.status(400).send({ 'message': 'The token you provided is invalid' });
             }
-            console.log(decoded.userId)
 
             return res.status(200).send({userId: decoded.userId});
         } catch(error) {

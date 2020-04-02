@@ -19,7 +19,7 @@ const Articles = {
         const articlesText = `
             INSERT INTO articles(title, only_for_company, image_url, content, created_date, modified_date, author_id)
             VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING id;
-        `;t
+        `;
 
         const values = [
             title,
@@ -56,11 +56,13 @@ const Articles = {
                      WHERE c.article_id = a.id
                    ) AS categories
               ) c
+          WHERE LOWER(a.title) LIKE LOWER($1)
+             OR $2 = ANY (c.categories)
             `;
         try {
-            const { rows, rowCount } = await db.query(findAllQuery);
-            console.log(rows)
-            return res.status(200).send({ articles: rows });
+            const search = req.query.search || '';
+            const { rows, rowCount } = await db.query(findAllQuery, [`%${search}%`, search]);
+            return res.status(200).send({ se: req.params.search, articles: rows,  });
         } catch(error) {
             console.log(error)
             return res.status(400).send(error);

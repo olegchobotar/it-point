@@ -2,65 +2,21 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 import logo from '../../assets/logo-cropped.png';
-import InputBase from '@material-ui/core/InputBase';
-import SearchIcon from '@material-ui/icons/Search';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import {connect} from 'react-redux';
 import logoutUser from '../../actions/user/logoutUser';
 import {compose} from "redux";
 import {withRouter} from "react-router";
-import { fade, makeStyles } from '@material-ui/core/styles';
 
 import Avatar from '../Avatar';
 
 import './styles.css';
 
-const useStyles = makeStyles(theme => ({
-    search: {
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.45),
-        '&:hover': {
-            backgroundColor: fade(theme.palette.common.white, 0.55),
-        },
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(1),
-            width: 'auto',
-        },
-    },
-    searchIcon: {
-        width: theme.spacing(7),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    inputRoot: {
-        color: 'inherit',
-    },
-    inputInput: {
-        padding: theme.spacing(1, 1, 1, 7),
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-            width: 120,
-            '&:focus': {
-                width: 200,
-            },
-        },
-    },
-}));
-
 const Header = props => {
     const { currentUser } = props;
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
-    const classes = useStyles();
 
     const handleMenu = event => {
         setAnchorEl(event.currentTarget);
@@ -91,20 +47,6 @@ const Header = props => {
                 <div className="actions">
                     <nav>
                         <ul>
-                            <div className={classes.search}>
-                                <div className={classes.searchIcon}>
-                                    <SearchIcon />
-                                </div>
-                                <InputBase
-                                    placeholder="Search…"
-                                    classes={{
-                                        root: classes.inputRoot,
-                                        input: classes.inputInput,
-                                    }}
-                                    inputProps={{ 'aria-label': 'search' }}
-                                    onChange={event => console.log(event.target.value)}
-                                />
-                            </div>
                             <li>
                                 {currentUser.nickname
                                     ? (

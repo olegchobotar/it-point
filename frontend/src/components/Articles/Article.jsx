@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import Tag from '../../components/Tag';
 import { withRouter } from 'react-router';
 
 import './style.css';
@@ -32,7 +33,6 @@ const Article = props => {
         categories,
         author,
         image_url: imageUrl,
-        content,
         created_date: createdDate,
     } = props;
     const classes = useStyles();
@@ -41,49 +41,21 @@ const Article = props => {
         props.history.push(`/articles/${id}`);
     };
 
+    const formattedDate = new Date(createdDate)
     return (
-        <div className='article-wrapper'>
-            <Card mx="auto" className={classes.card}>
-                <div style={{backgroundColor: '#4be4dc',
-                    padding: '0.5rem 0',
-                    textAlign: 'center'}}
-                >
-                    <span className="card-item-category">{categories ? categories.join(', ') : ''}</span>
+        <div className="tile-article-wrapper" onClick={handleRedirection}>
+            <img src={imageUrl} />
+            <div className="tile-article-content">
+                <div>
+                    {categories.map(tag => (
+                        <Tag tag={tag} />
+                    ))}
                 </div>
-                <CardActionArea
-                    onClick={handleRedirection}
-                >
-                    <CardMedia
-                        className={classes.media}
-                        image={imageUrl}
-                        title={title}
-                    />
-                    <CardHeader
-                        className={classes.header}
-                        avatar={
-                            <Avatar user={author} />
-                        }
-                        title={author}
-                        subheader={createdDate}
-                    />
-                    <CardContent>
-                        <Typography
-                            gutterBottom
-                            variant="h5"
-                            component="h2"
-                        >
-                            {title}
-                        </Typography>
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            component="p"
-                        >
-                            {content}
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>
+                <h3 className="tile-article-title">{title}</h3>
+                <div className="tile-article-footer">
+                    by <strong>{author} </strong>&#8226; {formattedDate.toDateString()}
+                </div>
+            </div>
         </div>
     );
 };
