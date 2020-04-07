@@ -48,7 +48,7 @@ const Article = props => {
             <div className="tile-article-content">
                 <div>
                     {categories.map(tag => (
-                        <Tag tag={tag} />
+                        <Tag key={tag} tag={tag} />
                     ))}
                 </div>
                 <h3 className="tile-article-title">{title}</h3>

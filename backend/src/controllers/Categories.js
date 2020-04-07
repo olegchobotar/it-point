@@ -2,7 +2,7 @@ import db from '../db';
 
 const Categories = {
     async getAll(req, res) {
-        const findAllQuery = 'SELECT DISTINCT name AS id, name AS text FROM article_categories';
+        const findAllQuery = 'SELECT DISTINCT name AS id, name FROM article_categories';
         try {
             const { rows } = await db.query(findAllQuery);
             return res.status(200).send(rows);

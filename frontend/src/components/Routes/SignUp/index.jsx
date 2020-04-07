@@ -48,9 +48,9 @@ const SignUp = props => {
     };
 
     return (
-        <Modal title="Sign up" height="450px">
+        <Modal title="Sign up" height="350px">
             <div>
-                <div>
+                <div className="sign-up-form-inputs">
                     <TextField
                         className="sign-up-form-input"
                         label="Email"
@@ -77,16 +77,16 @@ const SignUp = props => {
                     >
                         SIGN UP
                     </Button>
-                    <span className="sign-up-form-sign-with">Or Sign up with:</span>
+                    {/*<span className="sign-up-form-sign-with">Or Sign up with:</span>*/}
                 </div>
-                <div className="sign-up-form-social-wrapper">
-                    <StyledIconButton className="sign-up-form-social">
-                        <FacebookIcon />
-                    </StyledIconButton>
-                    <StyledIconButton className="sign-up-form-social">
-                        <TwitterIcon />
-                    </StyledIconButton>
-                </div>
+                {/*<div className="sign-up-form-social-wrapper">*/}
+                    {/*<StyledIconButton className="sign-up-form-social">*/}
+                        {/*<FacebookIcon />*/}
+                    {/*</StyledIconButton>*/}
+                    {/*<StyledIconButton className="sign-up-form-social">*/}
+                        {/*<TwitterIcon />*/}
+                    {/*</StyledIconButton>*/}
+                {/*</div>*/}
                 <hr/>
                 <span className="sign-up-form-sign-up">
                     Already registered?

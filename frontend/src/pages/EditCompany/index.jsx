@@ -87,7 +87,7 @@ const EditCompany = props => {
             });
     };
     
-    const handleDelete = currentIndex => {
+    const onDelete = currentIndex => {
         setCategories(categories.filter((tag, index) => index !== currentIndex))
     };
 
@@ -96,11 +96,11 @@ const EditCompany = props => {
         setEmail(event.target.value)
     };
 
-    const handleAddition = category => {
+    const onAddition = category => {
         setCategories(([...categories, category]));
     };
 
-    const handleDrag = (category, currentPosition, newPosition) => {
+    const onDrag = (category, currentPosition, newPosition) => {
         const newCategories = categories.slice();
         newCategories.splice(currentPosition, 1);
         newCategories.splice(newPosition, 0, category);
@@ -109,7 +109,7 @@ const EditCompany = props => {
     };
 
     const handleSave = () => {
-        const categoriesToSend = categories.map(({ text }) => text);
+        const categoriesToSend = categories.map(({ name }) => name);
         axios.put(`http://localhost:5000/api/v1/companies/${companyId}`,
             { name, description, categories: categoriesToSend }, {
                 headers: {
@@ -123,7 +123,6 @@ const EditCompany = props => {
                 addBubble(message, Bubble.Error);
             });
     };
-    console.log(categories);
 
     return (
         <div className="edit-company-wrapper">
@@ -146,12 +145,13 @@ const EditCompany = props => {
                     onChange={(event) => {setDescription(event.target.value)}}
                 />
                 <p>Add main categories</p>
+
                 <CategoriesInput
                     placeholder="Category"
                     categories={categories}
-                    handleDelete={handleDelete}
-                    handleDrag={handleDrag}
-                    handleAddition={handleAddition}
+                    onDelete={onDelete}
+                    onDrag={onDrag}
+                    onAddition={onAddition}
                 />
                 <UsersList companyId={companyId}/>
                 <div>

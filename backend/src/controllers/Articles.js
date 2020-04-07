@@ -8,6 +8,7 @@ const Articles = {
     async create(req, res) {
         const { title, onlyForCompany, imageUrl, content, categories } = req.body;
 
+        console.log(JSON.stringify(content))
         if (!title || !content || !categories.length) {
             return res.status(400).send({ 'message': 'Some values are missing' });
         }
@@ -78,6 +79,7 @@ const Articles = {
        a.created_date,
        a.modified_date,
        u.nickname as author,
+       a.author_id,
        c.categories
        FROM articles as a 
         INNER JOIN users AS u

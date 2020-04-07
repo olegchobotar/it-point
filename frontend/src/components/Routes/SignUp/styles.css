@@ -24,7 +24,12 @@
     margin-bottom: 20px;
 }
 
+.sign-up-form-inputs {
+    margin-bottom: 2rem;
+}
+
 .sign-up-form-sign-up {
+    bottom: 0;
     font-size: 14px;
     color: #a3a3a3;
     display: flex;
