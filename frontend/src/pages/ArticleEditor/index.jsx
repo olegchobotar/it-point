@@ -55,12 +55,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ArticleCreator = props => {
-    const { article } = props;
+    const { article, update, articleId } = props;
     const [title, setTitle] = useState(article.title || '');
     const [categories, setCategories] = useState(article.categories || []);
     const [imageUrl, setImageUrl] = useState(article.imageUrl || '');
     const [content, setContent] = useState(article.content || '');
     const [companyScope, setCompanyScope] = useState(article.companyScope || false);
+    let editor = null;
 
     const classes = useStyles();
     const [tab, setTab] = React.useState(0);
@@ -68,7 +69,10 @@ const ArticleCreator = props => {
     const handleChange = (event, newValue) => {
         setTab(newValue);
     };
-    console.log(categories)
+
+    const setEditorInstanceRef = instance => {
+        editor = instance;
+    };
 
     const clearFields = () => {
         setTitle('');
@@ -99,14 +103,17 @@ const ArticleCreator = props => {
     };
 
     const publishArticle = async () => {
+        const contentInput = await editor.save();
         const params = {
             title,
             companyScope,
             imageUrl,
-            content,
+            content: contentInput,
             categories: categories.map(category => category.name),
         };
-        axios.post('http://localhost:5000/api/v1/articles', params,             {
+        const call = update ? axios.put : axios.post;
+        const url = articleId ? `http://localhost:5000/api/v1/articles/${articleId}` : 'http://localhost:5000/api/v1/articles';
+        call(url, params,{
             headers: {
                 'x-access-token': localStorage.token,
             }
@@ -140,7 +147,7 @@ const ArticleCreator = props => {
             <TabPanel tab={tab} index={0}>
                 <div className="article-creator-wrapper">
                     <div className="article-creator-header">
-                        <h2>Create new Article</h2>
+                        <h2>{update ? 'Update article' : 'Create new Article'}</h2>
                     </div>
                     <TextField
                         label="Title"
@@ -155,14 +162,6 @@ const ArticleCreator = props => {
                             id='only-for-company'
                             onChange={toggleCompanyScope} />
                     </div>
-                    {/*<ImageUploader*/}
-                    {/*withIcon={true}*/}
-                    {/*singleImage={true}*/}
-                    {/*buttonText='Choose images'*/}
-                    {/*onChange={() => {}}*/}
-                    {/*imgExtension={['.jpg', '.gif', '.png', '.gif']}*/}
-                    {/*maxFileSize={5242880}*/}
-                    {/*/>*/}
                     <TextField
                         label="Image URL"
                         value={imageUrl}
@@ -181,22 +180,22 @@ const ArticleCreator = props => {
                 </div>
             </TabPanel>
             <TabPanel tab={tab} index={1}>
-                <Editor setEditorValue={setContent} />
+                <Editor setInstanceRef={setEditorInstanceRef} data={content} />
                 <Button width="400px" onClick={publishArticle}>Publish</Button>
             </TabPanel>
-
         </div>
     );
 };
 
 ArticleCreator.propTypes = {
     article: PropTypes.object,
+    update: PropTypes.bool,
 };
 
 ArticleCreator.defaultProps = {
     article: {},
+    update: false,
 };
-
 
 const mapStateToProps = state => ({
     isCompanyMember: state.Company.company,

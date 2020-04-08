@@ -25,6 +25,7 @@ app.delete('/api/v1/users/me', Auth.verifyToken, Users.delete);
 app.get('/api/v1/articles', Articles.getAll);
 app.post('/api/v1/articles', Articles.create);
 app.get('/api/v1/articles/:id', Articles.getOne);
+app.put('/api/v1/articles/:id', Articles.update);
 
 app.post('/api/v1/companies', Companies.create);
 app.get('/api/v1/companies/:id', Companies.getOne);

@@ -13,7 +13,7 @@ const Articles = {
             return res.status(400).send({ 'message': 'Some values are missing' });
         }
         const token = req.headers['x-access-token'];
-        if(!token) {
+        if (!token) {
             return res.status(400).send({ 'message': 'Token is not provided' });
         }
         const decoded = await jwt.verify(token, process.env.SECRET);
@@ -105,23 +105,37 @@ const Articles = {
         }
     },
     async update(req, res) {
-        const findOneQuery = 'SELECT * FROM reflections WHERE id=$1';
-        const updateOneQuery =`UPDATE reflections
-      SET success=$1,low_point=$2,take_away=$3,modified_date=$4
-      WHERE id=$5 returning *`;
+        const { title, onlyForCompany, imageUrl, content, categories } = req.body;
+        const articleId = req.params.id;
+        const findOneQuery = 'SELECT * FROM articles WHERE id = $1';
+        const removeCategories = 'DELETE FROM article_categories WHERE article_id = $1';
+        const updateOneQuery =`UPDATE articles
+                               SET title = $1,
+                                   only_for_company = $2,
+                                   image_url = $3,
+                                   content = $4,
+                                   modified_date = $5
+          WHERE id = $6 returning *`;
         try {
-            const { rows } = await db.query(findOneQuery, [req.params.id]);
-            if(!rows[0]) {
-                return res.status(404).send({'message': 'reflection not found'});
+            const { rows } = await db.query(findOneQuery, [articleId]);
+            if (!rows[0]) {
+                return res.status(404).send({'message': 'Article not found'});
             }
             const values = [
-                req.body.success || rows[0].success,
-                req.body.low_point || rows[0].low_point,
-                req.body.take_away || rows[0].take_away,
+                title,
+                onlyForCompany,
+                imageUrl,
+                content,
                 moment(new Date()),
-                req.params.id
+                articleId,
             ];
             const response = await db.query(updateOneQuery, values);
+
+            await db.query(removeCategories, [articleId]);
+            categories.forEach(async category => {
+                const categoriesText = `INSERT INTO article_categories(article_id, name) VALUES ($1, $2)`;
+                await db.query(categoriesText, [articleId, category]);
+            });
             return res.status(200).send(response.rows[0]);
         } catch(err) {
             console.log(error);

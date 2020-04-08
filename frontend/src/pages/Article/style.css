@@ -1,0 +1,11 @@
+.article-page-header {
+    padding: 5rem 0;
+    background: linear-gradient(40deg, #45cafc, #303f9f);
+    color: #eeeeee;
+}
+
+.article-page-author {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}

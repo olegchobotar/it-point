@@ -4,17 +4,10 @@ import { connect } from 'react-redux';
 import { compose} from 'redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
-import Card from '@material-ui/core/Card';
-import Avatar from '@material-ui/core/Avatar';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import Typography from '@material-ui/core/Typography';
-import { getUserInitials } from '../../basic/helpers/user';
-import Editor from '../../components/Editor';
+import Avatar from '../../components/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import Editor from '../../components/Editor';
 import axios from 'axios';
 import './style.css';
 
@@ -33,6 +26,7 @@ const useStyles = makeStyles({
     editButton: {
         position: 'fixed',
         margin: 0,
+        zIndex: 1000,
         top: 'auto',
         right: 30,
         bottom: 50,
@@ -73,43 +67,16 @@ const Article = props => {
     const classes = useStyles();
 
     return (
-        <div className='article-wrapper'>
-            <Card mx="auto" className={classes.card}>
-                <div style={{backgroundColor: '#4be4dc',
-                    padding: '0.5rem 0',
-                    textAlign: 'center'}}
-                >
-                    <span className="card-item-category">{categories ? categories.join(', ') : ''}</span>
+        <div className='article-page-wrapper'>
+            <div className="article-page-header">
+                <span className="card-item-category">{categories ? categories.join(' | ') : ''}</span>
+                <h2>{title}</h2>
+                <div className="article-page-author">
+                    <Avatar user={author}/>
+                    {author}
                 </div>
-                <CardActionArea>
-                    <CardMedia
-                        className={classes.media}
-                        image={imageUrl}
-                        title={title}
-                    />
-                    <CardHeader
-                        className={classes.header}
-                        avatar={
-                            <Avatar aria-label="recipe" className={classes.avatar}>
-                                {getUserInitials(author)}
-                            </Avatar>
-                        }
-                        title={author}
-                        subheader={date}
-                    />
-                    <CardContent>
-                        <Typography
-                            gutterBottom
-                            variant="h5"
-                            component="h2"
-                        >
-                            {title}
-                        </Typography>
-                       <Editor readOnly={true} editorValue={content} />
-                    </CardContent>
-                </CardActionArea>
-            </Card>
-            {console.log(props.userId, id)}
+            </div>
+            {content && <Editor data={content}/>}
             {props.userId === authorId && (
                 <IconButton onClick={handleEditClick} aria-label="edit" className={classes.editButton} >
                     <EditIcon fontSize="inherit" />
