@@ -14,15 +14,16 @@ import ArticleEditor from './pages/ArticleEditor/Editor';
 import CompanyInvitation from './pages/CompanyInvitation';
 import { NotificationContainer } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import { compose } from 'redux';
 import isValidToken from './actions/user/isValidToken';
 
 import './App.css';
 import {connect} from "react-redux";
 
 function App(props) {
-    useEffect(() => {
-        props.isValidToken();
-    }, []);
+    // useEffect(() => {
+    //     props.isValidToken();
+    // }, []);
     return (
         <div className="App">
             <Router>
@@ -44,7 +45,9 @@ function App(props) {
     );
 }
 
-export default connect(
-    null,
-    {isValidToken}
+export default compose(
+    connect(
+        null,
+        {isValidToken}
+        ),
 )(App);

@@ -26,8 +26,9 @@ const Header = props => {
         setAnchorEl(null);
     };
 
-    const handleSignOut = () => {
+    const handleSignOut = async () => {
         setEmptyAnchor();
+        await props.history.push('/');
         props.logoutUser();
     };
 

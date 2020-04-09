@@ -15,6 +15,9 @@ const Auth = {
                 return res.status(400).send({ 'message': 'The token you provided is invalid' });
             }
 
+            const deleteQuery = 'DELETE FROM users WHERE id = $1 returning *';
+            await db.query(deleteQuery, [req.user.id]);
+
             return res.status(200).send({userId: decoded.userId});
         } catch(error) {
             return res.status(400).send(error);

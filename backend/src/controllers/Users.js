@@ -2,6 +2,7 @@ import moment from 'moment';
 import db from '../db';
 import { isValidEmail, generateToken, getUserData } from '../helpers/user';
 import { hashValue, compareHashedValue } from '../helpers/hash';
+import jwt from "jsonwebtoken";
 
 const Users = {
     async create(req, res) {
@@ -45,7 +46,6 @@ const Users = {
         if (!isValidEmail(req.body.email)) {
             return res.status(400).send({ 'message': 'Please enter a valid email address' });
         }
-        console.log(hashValue(req.body.password))
         const text = 'SELECT * FROM users WHERE email = $1';
         try {
             const { rows } = await db.query(text, [req.body.email]);
@@ -58,7 +58,6 @@ const Users = {
                 return res.status(400).send({ 'message': 'The credentials you provided is incorrect' });
             }
 
-            console.log(user)
             const getRelatedCompanyQuery = 'SELECT * FROM companies WHERE id = $1';
             const { rows: company } = await db.query(getRelatedCompanyQuery, [user.company_id]);
 
@@ -90,6 +89,46 @@ const Users = {
             }
             return res.status(204).send({ 'success': true });
         } catch(error) {
+            console.log(error);
+            return res.status(400).send(error);
+        }
+    },
+    async update(req, res) {
+        const token = req.headers['x-access-token'];
+        if (!token) {
+            return res.status(400).send({ 'message': 'Token is not provided' });
+        }
+        try {
+            const decoded = await jwt.verify(token, process.env.SECRET);
+            const text = 'SELECT * FROM users WHERE id = $1';
+            const { rows } = await db.query(text, [decoded.userId]);
+            const foundedUser = rows[0];
+            let hashedPassword = null;
+            if (!foundedUser) {
+                return res.status(400).send({ 'message': 'The token you provided is invalid' });
+            }
+            if (req.body.oldPassword) {
+                if(!compareHashedValue(foundedUser.password, req.body.oldPassword)) {
+                    return res.status(400).send({ 'message': 'The password you provided is incorrect' });
+                }
+                hashedPassword = hashValue(req.body.newPassword);
+            }
+
+            const query = 'UPDATE users SET nickname = $1, password = $2 WHERE id = $3 returning *';
+            const values = [
+                req.body.nickname || foundedUser.nickname,
+                hashedPassword || foundedUser.password,
+                decoded.userId,
+            ];
+            const { rows: updatedValue } = await db.query(query, values);
+            const user = updatedValue[0];
+
+            return res.status(200).send({user: getUserData(user)});
+        } catch(error) {
+            if (error.routine === '_bt_check_unique') {
+                console.log(error);
+                return res.status(400).send({ 'message': 'User with that email or nickname already exist' });
+            }
             console.log(error);
             return res.status(400).send(error);
         }

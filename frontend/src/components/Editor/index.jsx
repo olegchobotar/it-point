@@ -15,6 +15,7 @@ const Editor = props => {
                 ...EDITOR_JS_TOOLS,
             }}
             data={data}
+            autofocus={true}
             hideToolbar={true}
             instanceRef={setInstanceRef}
         />

@@ -21,6 +21,7 @@ app.post('/api/v1/users', Users.create);
 app.post('/api/v1/users/login',Users.login);
 app.get('/api/v1/users/profile', Auth.verifyToken);
 app.delete('/api/v1/users/me', Auth.verifyToken, Users.delete);
+app.put('/api/v1/users/me', Users.update);
 
 app.get('/api/v1/articles', Articles.getAll);
 app.post('/api/v1/articles', Articles.create);

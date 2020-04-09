@@ -38,11 +38,22 @@ const useStyles = makeStyles({
 
 const Article = props => {
     const [article, setArticle] = useState({});
+    let editorRef = null;
 
     const fetchAPI = async () => {
         const { data } = await axios.get(`http://localhost:5000/api/v1/articles/${props.match.params.id}`);
         console.log(data)
         setArticle(data);
+    };
+
+    const setEditorRef = instanceRef => {
+        editorRef = instanceRef;
+        // instanceRef.render();
+    };
+
+    const run = async () => {
+        console.log(editorRef);
+      console.log(editorRef.render());
     };
 
     const {
@@ -76,7 +87,7 @@ const Article = props => {
                     {author}
                 </div>
             </div>
-            {content && <Editor data={content}/>}
+            {content && <Editor setInstanceRef={setEditorRef} data={content}/>}
             {props.userId === authorId && (
                 <IconButton onClick={handleEditClick} aria-label="edit" className={classes.editButton} >
                     <EditIcon fontSize="inherit" />

@@ -1,7 +1,7 @@
 import axios from "axios";
 import setCompany from '../company/setCompany';
 
-const loginUser = user => ({
+export const loginUser = user => ({
     type: 'LOGIN_USER',
     user,
 });

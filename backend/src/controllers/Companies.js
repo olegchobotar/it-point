@@ -28,7 +28,7 @@ const Companies = {
             const { rows } = await db.query(query, [req.params.id]);
             const company = {
               ...rows[0],
-              categories: rows[0].categories.map(category => ({ id: category, name: category })),
+              categories: rows[0].categories ? rows[0].categories.map(category => ({ id: category, name: category })) : [],
             };
             return res.status(200).send({ company });
         } catch(error) {
