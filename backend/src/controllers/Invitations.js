@@ -10,8 +10,8 @@ const Invitations = {
         if (!req.params.id) {
             return res.status(400).send({'message': 'Company id is missing'});
         }
-        const hashedValue = hashValue(req.params.id).replace('/', 'dash');
-
+        const hashedValue = hashValue(req.params.id).replace(/[^\w\s]/gi, '');
+        console.log(hashValue(req.params.id), hashedValue);
         const createQuery = `INSERT INTO
            invitations(company_id, token, expired_at)
            VALUES($1, $2, $3)

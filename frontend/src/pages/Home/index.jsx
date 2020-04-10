@@ -38,6 +38,7 @@ const Home = props =>  {
             <div className="home-filter-wrapper">
                 <FormControlLabel
                     className="home-company-switch"
+                    disabled={!props.company}
                     control={
                         <Switch
                             checked={companyRestrict}
@@ -49,7 +50,7 @@ const Home = props =>  {
                             color="primary"
                         />
                     }
-                    label="Company"
+                    label="Company articles"
                     labelPlacement="start"
                 />
                 <TextField
@@ -73,5 +74,6 @@ const Home = props =>  {
 
 const mapStateToProps = state => ({
     user: state.User,
+    company: state.Company.company,
 });
 export default connect(mapStateToProps)(Home);
