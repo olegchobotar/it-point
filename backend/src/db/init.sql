@@ -28,12 +28,14 @@ CREATE TABLE IF NOT EXISTS articles
   id SERIAL PRIMARY KEY,
   title VARCHAR(100) NOT NULL,
   only_for_company BOOLEAN,
+  company_id INT,
   image_url VARCHAR(100),
-  content VARCHAR(1500) NOT NULL,
+  content VARCHAR(100000) NOT NULL,
   created_date TIMESTAMP,
   modified_date TIMESTAMP,
   author_id INT NOT NULL,
-  FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE SET NULL
+  FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE SET NULL,
+  FOREIGN KEY (company_id) REFERENCES companies (id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS article_categories

@@ -30,6 +30,7 @@ const Header = props => {
         setEmptyAnchor();
         await props.history.push('/');
         props.logoutUser();
+        await props.history.push('/');
     };
 
     const showSettings = () => {

@@ -1,5 +1,4 @@
 import React, { useState} from 'react';
-import TextField from '@material-ui/core/TextField';
 import Toggle from 'react-toggle';
 import ImageUploader from 'react-images-upload';
 import ReactTags from '../../components/CategoriesInput';
@@ -12,9 +11,14 @@ import {addBubble, Bubble} from "../../basic/helpers/bubbles";
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
+import { withRouter } from 'react-router';
+import { compose } from 'redux';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
+import { Delete } from "@material-ui/icons";
+import { TextField, IconButton } from '@material-ui/core';
+
 import Box from '@material-ui/core/Box';
 
 import './style.css';
@@ -107,6 +111,7 @@ const ArticleCreator = props => {
         const params = {
             title,
             companyScope,
+            onlyForCompany: companyScope,
             imageUrl,
             content: contentInput,
             categories: categories.map(category => category.name),
@@ -121,6 +126,23 @@ const ArticleCreator = props => {
             .then(() => {
                 addBubble('Published');
                 clearFields();
+            })
+            .catch(({ response: { data: { message } } }) => {
+                addBubble(message, Bubble.Error)
+            });
+    };
+
+    const deleteArticle = async () => {
+
+        axios.delete(`http://localhost:5000/api/v1/articles/${articleId}`,{
+            headers: {
+                'x-access-token': localStorage.token,
+            }
+        })
+            .then(async () => {
+                await props.history.push('/');
+                addBubble('Deleted');
+
             })
             .catch(({ response: { data: { message } } }) => {
                 addBubble(message, Bubble.Error)
@@ -148,6 +170,7 @@ const ArticleCreator = props => {
                 <div className="article-creator-wrapper">
                     <div className="article-creator-header">
                         <h2>{update ? 'Update article' : 'Create new Article'}</h2>
+                        {update && <IconButton onClick={deleteArticle}><Delete/></IconButton>}
                     </div>
                     <TextField
                         label="Title"
@@ -201,4 +224,7 @@ const mapStateToProps = state => ({
     isCompanyMember: state.Company.company,
 });
 
-export default connect(mapStateToProps)(ArticleCreator);
+export default compose(
+    withRouter,
+    connect(mapStateToProps),
+)(ArticleCreator)

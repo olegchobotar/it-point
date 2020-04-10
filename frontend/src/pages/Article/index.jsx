@@ -51,11 +51,6 @@ const Article = props => {
         // instanceRef.render();
     };
 
-    const run = async () => {
-        console.log(editorRef);
-      console.log(editorRef.render());
-    };
-
     const {
         id,
         title,
