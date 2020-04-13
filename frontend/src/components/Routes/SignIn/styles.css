@@ -24,6 +24,10 @@
     margin-bottom: 20px;
 }
 
+.sign-in-inputs {
+    margin-bottom: 2rem;
+}
+
 .sign-in-form-sign-up {
     font-size: 14px;
     color: #a3a3a3;

@@ -28,15 +28,14 @@ const SignIn = props => {
             });
     };
     return (
-        <Modal title="Sign in">
+        <Modal title="Sign in" height="300px">
             <form>
                 <div>
-                    <div>
+                    <div className="sign-in-inputs">
                         <TextField
                             className="sign-in-form-input"
                             label="Your email"
                             color="primary"
-                            // value={value}
                             onChange={(event) => {setEmail(event.target.value)}}
                         />
                         <TextField
@@ -44,11 +43,10 @@ const SignIn = props => {
                             label="Your password"
                             color="primary"
                             type="password"
-                            // value={value}
                             onChange={(event) => {setPassword(event.target.value)}}
                         />
                         <div className="sign-in-form-forgot-password">
-                            <Link to={'/reset-password'}>Forgot Password?</Link>
+                           {/*<Link to={'/reset-password'}>Forgot Password?</Link>*/}
                         </div>
                         <Button
                             color="primary"
@@ -57,16 +55,16 @@ const SignIn = props => {
                         >
                             SIGN IN
                         </Button>
-                        <span className="sign-in-form-sign-with">Or Sign in with:</span>
+                        {/*<span className="sign-in-form-sign-with">Or Sign in with:</span>*/}
                     </div>
-                    <div className="sign-in-form-social-wrapper">
-                        <StyledIconButton className="sign-in-form-social">
-                            <FacebookIcon />
-                        </StyledIconButton>
-                        <StyledIconButton className="sign-in-form-social">
-                            <TwitterIcon />
-                        </StyledIconButton>
-                    </div>
+                    {/*<div className="sign-in-form-social-wrapper">*/}
+                        {/*<StyledIconButton className="sign-in-form-social">*/}
+                            {/*<FacebookIcon />*/}
+                        {/*</StyledIconButton>*/}
+                        {/*<StyledIconButton className="sign-in-form-social">*/}
+                            {/*<TwitterIcon />*/}
+                        {/*</StyledIconButton>*/}
+                    {/*</div>*/}
                     <hr/>
                     <span className="sign-in-form-sign-up">
                     Not a member?

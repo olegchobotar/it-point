@@ -52,7 +52,7 @@ const EditCompany = props => {
         if (!invitationLink) {
             axios.post(`http://localhost:5000/api/v1/companies/${companyId}/invitations`, { companyId })
                 .then(({ data: { token } }) => {
-                    setInvitationLink(`http://localhost:3000/company/verify?token=${token}`);
+                    setInvitationLink(`http://localhost:8080/company/verify?token=${token}`);
                     addBubble('Generated');
                 })
                 .catch(({ response: { data: { message } } }) => {

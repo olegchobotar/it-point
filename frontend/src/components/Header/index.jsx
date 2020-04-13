@@ -71,7 +71,6 @@ const Header = props => {
                                                 open={open}
                                                 onClose={setEmptyAnchor}
                                             >
-                                                <MenuItem onClick={setEmptyAnchor}>Profile</MenuItem>
                                                 <MenuItem
                                                     component={Link}
                                                     onClick={setEmptyAnchor}
